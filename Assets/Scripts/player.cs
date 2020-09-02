@@ -33,12 +33,18 @@ public class Player : MonoBehaviour
 
     private Quaternion GetCharacterRotation()
     {
-        // Will need to be abstracted away to support different peripherals (console controllers / mouse / etc)
-        // Should probably not be instantiating variables in the update loop like this
-        var mouse = Input.mousePosition;
-        var screenPoint = Camera.main.WorldToScreenPoint(transform.localPosition);
-        var offset = new Vector2(mouse.x - screenPoint.x, mouse.y - screenPoint.y);
-        var angle = Mathf.Atan2(offset.y, offset.x) * Mathf.Rad2Deg;
+        var mousePos = Input.mousePosition;
+        Plane playerPlane = new Plane(Vector3.up, transform.position);
+        float distance = 0;
+        Vector3 targetPos = Vector3.zero;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (playerPlane.Raycast(ray, out distance))
+        {
+            targetPos = ray.GetPoint(distance);
+        }
+        var relativePos = targetPos - transform.position;
+        var angle = Mathf.Atan2(relativePos.z, relativePos.x) * Mathf.Rad2Deg;
         return Quaternion.Euler(-90, -angle + 180, 0);
     }
 }
