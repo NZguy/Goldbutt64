@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    public float damage = 10f;
+    public int damage = 10;
     public float range = 100f;
 
     public Camera shootCam;
@@ -38,10 +38,10 @@ public class Gun : MonoBehaviour
         {
             //Debug.Log(hit.transform.name);
 
-            Target target = hit.transform.GetComponent<Target>();
-            if (target != null)
+            Enemy enemy = hit.transform.GetComponent<Enemy>();
+            if (enemy != null)
             {
-                target.TakeDamage(damage);
+                enemy.TakeDamage(damage);
             }
         }
 
