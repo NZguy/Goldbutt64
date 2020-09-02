@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class player : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
-    public ActionBase PrimaryAction;
-    public ActionBase SecondaryAction;
+    public GameObject primaryWeapon;
 
     private Rigidbody rb;
     public float speed = 10;
@@ -20,18 +19,16 @@ public class player : MonoBehaviour
     {
         transform.rotation = GetCharacterRotation();
         rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * speed, 0, Input.GetAxis("Vertical_Move") * speed);
-        UpdateAction(PrimaryAction, "Fire1");
-        UpdateAction(SecondaryAction, "Fire2"); 
+        HandleAttack();
+
     }
 
-    private void UpdateAction(IAction action, string key)
+    private void HandleAttack()
     {
-        if (action != null)
-        {
-            action.Update();
-            if (Input.GetButtonDown(key))
-                action.Act();
-        }
+        if (Input.GetButtonDown("Fire1"))
+            primaryWeapon.GetComponent<Gun>().Attack(true);
+        else if (Input.GetButton("Fire1"))
+            primaryWeapon.GetComponent<Gun>().Attack(false);
     } 
 
     private Quaternion GetCharacterRotation()

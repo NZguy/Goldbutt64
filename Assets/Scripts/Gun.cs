@@ -2,40 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : ActionCooldown
+public class Gun : MonoBehaviour
 {
     public float damage = 10f;
     public float range = 100f;
 
     public Camera shootCam;
     public ParticleSystem bulletTrail;
-    public CooldownSound cooldownSound;
-    public AudioSource FireSound;
+    public AudioSource musicBox;
 
-    public override void Update()
+    public bool attackOffCooldown;
+    public float attackRate = 0.5f;
+
+    private void Start()
     {
-        base.Update();
-        cooldownSound.Update();
+        attackOffCooldown = true;
     }
 
-    public override void ActionOffCooldown()
+    public void Attack(bool isClick)
     {
-        FireSound.Play();
-        Shoot();
+        if (attackOffCooldown)
+            StartCoroutine(AttackLoop());
+        else if (isClick)
+            musicBox.GetComponent<MusicBox>().playCoolSound();
     }
 
-    public override void ActionOnCooldown()
+    public IEnumerator AttackLoop()
     {
-        cooldownSound.Act();
-        // play a wacky sound maybe -- perhaps another action with it's own cooldown and another ActionOnCooldown method??
-    }
-
-    void Shoot ()
-    {
+        attackOffCooldown = false;
+        musicBox.GetComponent<MusicBox>().playShootSound();
         bulletTrail.Play();
 
         RaycastHit hit;
-         if (Physics.Raycast(shootCam.transform.position, shootCam.transform.forward, out hit, range))
+        if (Physics.Raycast(shootCam.transform.position, shootCam.transform.forward, out hit, range))
         {
             //Debug.Log(hit.transform.name);
 
@@ -45,5 +44,8 @@ public class Gun : ActionCooldown
                 target.TakeDamage(damage);
             }
         }
+
+        yield return new WaitForSeconds(attackRate);
+        attackOffCooldown = true;
     }
 }
