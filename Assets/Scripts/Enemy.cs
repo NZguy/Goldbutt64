@@ -59,12 +59,12 @@ public class Enemy : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.collider.tag == "Player")
+        if (other != null && other.collider.tag == "Player")
         {
             this.canMove = false;
             this.curMoveTimer = moveTimer;
         }
-        else if (other.collider.tag == "Wall")
+        else if (other != null && other.collider.tag == "Wall")
         {
             this.rb.velocity = this.rb.velocity * 1.8f;
             if (canDupe)
@@ -73,6 +73,13 @@ public class Enemy : MonoBehaviour
                 canDupe = false;
                 dupeCooldown = dupeCooldownMax;
             }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.CompareTo("BoundingBox") == 0) {
+            this.Die();
         }
     }
 
