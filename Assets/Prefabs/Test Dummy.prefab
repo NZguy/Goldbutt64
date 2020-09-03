@@ -126,6 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ddb79063c30e4e488c86f56939b9e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 5966831184466303698}
   health: 50
   speed: 30
   player: {fileID: 0}

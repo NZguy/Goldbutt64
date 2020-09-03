@@ -1,7 +1,13 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject enemyPrefab;
+    private bool canDupe;
+    private float dupeCooldown;
+    public float dupeCooldownMax;
+
     public int health = 50;
     public float speed = 2f;
     public GameObject player;
@@ -16,6 +22,8 @@ public class Enemy : MonoBehaviour
         this.canMove = true;
         this.curMoveTimer = 0;
         this.rb = GetComponent<Rigidbody>();
+        this.canDupe = false;
+        this.dupeCooldown = dupeCooldownMax;
 
         if(player == null)
         {
@@ -38,6 +46,15 @@ public class Enemy : MonoBehaviour
                 canMove = true;
             }
         }
+
+        if (!canDupe)
+        {
+            dupeCooldown -= Time.deltaTime;
+            if(dupeCooldown <= 0)
+            {
+                canDupe = true;
+            }
+        }
     }
 
     void OnCollisionEnter(Collision other)
@@ -50,6 +67,12 @@ public class Enemy : MonoBehaviour
         else if (other.collider.tag == "Wall")
         {
             this.rb.velocity = this.rb.velocity * 1.8f;
+            if (canDupe)
+            {
+                Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+                canDupe = false;
+                dupeCooldown = dupeCooldownMax;
+            }
         }
     }
 
