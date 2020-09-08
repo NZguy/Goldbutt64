@@ -1,14 +1,18 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Events.Base;
+using Assets.Scripts.Events.OnEvents;
+using Assets.Scripts.Interfaces;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : NotifierBase, ISubscriber
 {
 
     public GameObject primaryWeapon;
 
     private Rigidbody rb;
     public float speed = 10;
+    private bool IsMoving;
 
     void Start()
     {
@@ -19,8 +23,20 @@ public class Player : MonoBehaviour
     {
         transform.rotation = GetCharacterRotation();
         rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * speed, 0, Input.GetAxis("Vertical_Move") * speed);
-        HandleAttack();
 
+        bool IsMovingNew = rb.velocity.magnitude > 0;
+        if (IsMovingNew && !IsMoving)
+        {   // Just starting moving - better let my many subscribers know!
+            Notify(new OnStartMoving(this, this));
+
+        } else if (!IsMovingNew && IsMoving)
+        {   // Just stopped moving - better let my many subscribers know!
+            Notify(new OnStopMoving(this, this));
+        }
+
+        IsMoving = IsMovingNew;
+
+        HandleAttack();
     }
 
     private void HandleAttack()
@@ -46,5 +62,11 @@ public class Player : MonoBehaviour
         var relativePos = targetPos - transform.position;
         var angle = Mathf.Atan2(relativePos.z, relativePos.x) * Mathf.Rad2Deg;
         return Quaternion.Euler(-90, -angle + 180, 0);
+    }
+
+    
+    public bool OnNotify(IGameEvent gameEvent)
+    {
+        throw new System.NotImplementedException();
     }
 }
