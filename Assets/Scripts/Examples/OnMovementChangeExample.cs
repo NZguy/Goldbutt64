@@ -32,15 +32,14 @@ public class OnMovementChangeExample : MonoBehaviour, ISubscriber
 
     public bool OnNotify(IGameEvent gameEvent)
     {
-        if (gameEvent is OnStartMoving)
+        // Found out you can type check and cast to a new object inline. 
+        if (gameEvent is OnStartMoving startMovingEvent)
         {
-            OnStartMoving evt = (OnStartMoving)gameEvent;
-            Debug.Log($"Target started moving!");
+            Debug.Log($"{startMovingEvent.MovingObject.gameObject.name} started moving!");
         }
-        else if (gameEvent is OnStopMoving)
+        else if (gameEvent is OnStopMoving stopMovingEvent)
         {
-            OnStopMoving evt = (OnStopMoving)gameEvent;
-            Debug.Log($"Target stopped moving!");
+            Debug.Log($"{stopMovingEvent.MovingObject.gameObject.name} stopped moving!");
         }
         return false;
     }
