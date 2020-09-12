@@ -14,6 +14,8 @@ public class Player : NotifierBase, ISubscriber
     private Rigidbody rb;
     private bool IsMoving;
 
+    public float Health;
+
     void Start()
     {
         this.rb = GetComponent<Rigidbody>();
@@ -55,7 +57,34 @@ public class Player : NotifierBase, ISubscriber
             PercentValue = -90.0f
         });
 
-        AddAttribute(new AttributeEntity(AttributeType.Snakes)
+        AddAttribute(new AttributeEntity(AttributeType.Health)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.HealthRegen)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.Mana)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        AddAttribute(new AttributeEntity(AttributeType.ManaRegen)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        AddAttribute(new AttributeEntity(AttributeType.Piercing)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        AddAttribute(new AttributeEntity(AttributeType.PiercingResistance)
         {
             FlatValue = 10,
             PercentValue = .5f

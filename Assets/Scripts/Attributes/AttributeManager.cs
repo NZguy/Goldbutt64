@@ -125,10 +125,10 @@ namespace Assets.Scripts.Attributes
         }
 
         #region Debug/Print methods
-        private const int AttributeColumnWidth  = 15;
-        private const int FlatColumnWidth       = 8;
-        private const int PercentColumnWidth    = 8;
-        private const int FinalColumnWidth      = 8;
+        private const int AttributeColumnWidth  = 20;
+        private const int FlatColumnWidth       = 6;
+        private const int PercentColumnWidth    = 10;
+        private const int FinalColumnWidth      = 10;
 
 
         public string ToStringTableFinalValues()
@@ -160,9 +160,7 @@ namespace Assets.Scripts.Attributes
             StringBuilder sb = new StringBuilder();
             foreach (AttributeType key in FinalValues.Keys)
             {
-                sb.Append($"\n<u>{key.ToString(), -AttributeColumnWidth}   {"Flat",FlatColumnWidth}   {"Percent",PercentColumnWidth}   {"Final", FinalColumnWidth}</u>");
-
-                //sb.Append($"\n<u>{key.ToString(), -AttributeColumnWidth}   {FinalValues[key],FinalColumnWidth+ FlatColumnWidth+ PercentColumnWidth+ FinalColumnWidth}</u>");
+                sb.Append($"\n<u>{AttributeEnumsExtended.GetTypeInfoFrom(key, key.GetType()).DisplayName, -AttributeColumnWidth}   {"Flat",FlatColumnWidth}   {"Percent",PercentColumnWidth}   {"Final", FinalColumnWidth}</u>");
                 AddAttributesOfType(key, sb);
                 sb.Append("\n");
             }
