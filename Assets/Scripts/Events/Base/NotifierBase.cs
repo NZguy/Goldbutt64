@@ -1,9 +1,6 @@
 ﻿using Assets.Scripts.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts.Events.Base
@@ -56,16 +53,32 @@ namespace Assets.Scripts.Events.Base
         public static int TotalSubScriptions { get; private set; }
 
         private static Dictionary<ISubscriber, Dictionary<IGameEvent, INotifier>> AllSubs = new Dictionary<ISubscriber, Dictionary<IGameEvent, INotifier>>();
-        private Dictionary<Type, List<ISubscriber>> Subscribed;
+        private Dictionary<Type, List<ISubscriber>> Subscribed = new Dictionary<Type, List<ISubscriber>>();
+        private List<(IGameEvent gameEvent, ISubscriber subscriber)> PendingRemoval = new List<(IGameEvent gameEvent, ISubscriber subscriber)>();
 
-        public NotifierBase()
-        {
-            Subscribed = new Dictionary<Type, List<ISubscriber>>();
-            PendingRemoval = new List<(IGameEvent gameEvent, ISubscriber subscriber)>();
-        }
+        //protected void Init()
+        //{
+        //    Subscribed = new Dictionary<Type, List<ISubscriber>>();
+        //    PendingRemoval = new List<(IGameEvent gameEvent, ISubscriber subscriber)>();
+        //}
+
+        //public virtual void Start()
+        //{
+        //    Subscribed = new Dictionary<Type, List<ISubscriber>>();
+        //    PendingRemoval = new List<(IGameEvent gameEvent, ISubscriber subscriber)>();
+        //}
+
+        //public NotifierBase()
+        //{
+        //    Subscribed = new Dictionary<Type, List<ISubscriber>>();
+        //    PendingRemoval = new List<(IGameEvent gameEvent, ISubscriber subscriber)>();
+        //}
 
         public void Subscribe(IGameEvent gameEvent, ISubscriber sub)
         {
+            //if (Subscribed == null)
+            //    Init();
+
             if (Subscribed.ContainsKey(gameEvent.GetType()))
             {
                 List<ISubscriber> CurrentSubs = Subscribed[gameEvent.GetType()];
@@ -109,7 +122,6 @@ namespace Assets.Scripts.Events.Base
         }
 
         private bool IsBusyNotifying = false;
-        private List<(IGameEvent gameEvent, ISubscriber subscriber)> PendingRemoval;
         public void Notify(IGameEvent gameEvent)
         {
             try

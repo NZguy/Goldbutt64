@@ -12,24 +12,18 @@ namespace Assets.Scripts.Attributes
 
     public class AttributeManager : NotifierBase, ISubscriber
     {
-        private INotifier Parent;
-        private HashSet<AttributeEntity> attributes;
-        private HashSet<AttributeEntity> attributesNeedingUpdates;
-        private Dictionary<AttributeType, float> PercentValues;
-        private Dictionary<AttributeType, float> FlatValues;
+        private NotifierBase Parent;
+        private HashSet<AttributeEntity> attributes = new HashSet<AttributeEntity>();
+        private HashSet<AttributeEntity> attributesNeedingUpdates = new HashSet<AttributeEntity>();
+        private Dictionary<AttributeType, float> PercentValues = new Dictionary<AttributeType, float>();
+        private Dictionary<AttributeType, float> FlatValues = new Dictionary<AttributeType, float>();
         private bool IsStale;
 
-        public Dictionary<AttributeType, float> FinalValues { get; private set; }
+        // Contains a copy of all attributes grouped by AttributeType. Created for debug use (and maybe for displaying stats later).
+        private Dictionary<AttributeType, List<AttributeEntity>> GroupedAttributes = new Dictionary<AttributeType, List<AttributeEntity>>();
 
-        public AttributeManager (INotifier parent)
-        {
-            Parent = parent;
-            attributes = new HashSet<AttributeEntity>();
-            attributesNeedingUpdates = new HashSet<AttributeEntity>();
-            PercentValues = new Dictionary<AttributeType, float>();
-            FlatValues = new Dictionary<AttributeType, float>();
-            FinalValues = new Dictionary<AttributeType, float>();
-        }
+        // Contains the final calculated values to be used by other objects.
+        public Dictionary<AttributeType, float> FinalValues = new Dictionary<AttributeType, float>();
 
         public void Update()
         {
@@ -56,20 +50,25 @@ namespace Assets.Scripts.Attributes
             {
                 IsStale = true;
                 attributes.Add(att);
+
                 if (FinalValues.ContainsKey(att.Type))
                 {
                     PercentValues[att.Type] += att.PercentValue;
                     FlatValues[att.Type] += att.FlatValue;
+                    GroupedAttributes[att.Type].Add(att);
+
                 }
                 else
                 {
+                    GroupedAttributes.Add(att.Type, new List<AttributeEntity>());
+                    GroupedAttributes[att.Type].Add(att);
+
                     PercentValues.Add(att.Type, att.PercentValue);
                     FlatValues.Add(att.Type, att.FlatValue);
                     FinalValues.Add(att.Type, 0);
                 }
             }
         }
-
         public void Add(List<AttributeEntity> atts)
         {
             foreach (AttributeEntity att in atts)
@@ -82,7 +81,7 @@ namespace Assets.Scripts.Attributes
         #region Update Methods
         public void CalculateFinalValues()
         {
-            foreach (AttributeType key in FinalValues.Keys)
+            foreach (AttributeType key in FlatValues.Keys)
             {
                 FinalValues[key] = FlatValues[key] + (FlatValues[key] * PercentValues[key]);
             }
@@ -100,6 +99,8 @@ namespace Assets.Scripts.Attributes
                 attributes.Remove(att);
                 PercentValues[att.Type] -= att.PercentValue;
                 FlatValues[att.Type] -= att.FlatValue;
+                GroupedAttributes[att.Type].Remove(att);
+
             }
             else
             {
@@ -124,21 +125,68 @@ namespace Assets.Scripts.Attributes
         }
 
         #region Debug/Print methods
-        private const int AttributeColumnWidth  = -7;
-        private const int FlatColumnWidth       = -4;
-        private const int PercentColumnWidth    = -4;
-        private const int FinalColumnWidth      = -5;
+        private const int AttributeColumnWidth  = 15;
+        private const int FlatColumnWidth       = 8;
+        private const int PercentColumnWidth    = 8;
+        private const int FinalColumnWidth      = 8;
 
-        public string ToStringTable()
+
+        public string ToStringTableFinalValues()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"{"Attribute", AttributeColumnWidth} | {"Flat",FlatColumnWidth} | {"Percent",PercentColumnWidth} | {"Final",FinalColumnWidth} ");
-            foreach (AttributeEntity att in attributesNeedingUpdates)
+            sb.Append($"{"Attribute", AttributeColumnWidth} | {"Final",FlatColumnWidth}");
+            foreach (AttributeType key in FinalValues.Keys)
             {
-                sb.Append($"\n{att.Type.ToString(),AttributeColumnWidth} | {FlatValues[att.Type],FlatColumnWidth} | {PercentValues[att.Type],PercentColumnWidth} | {FinalValues[att.Type],FinalColumnWidth} ");
+                sb.Append($"\n{key.ToString(), AttributeColumnWidth} | {FinalValues[key], FinalColumnWidth}");
             }
+            Debug.Log(sb.ToString());
             return sb.ToString();
         }
+
+        public string ToStringTableAttributes()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{"Attribute",AttributeColumnWidth} | {"Flat",FlatColumnWidth} | {"Percent",PercentColumnWidth}");
+            foreach (AttributeEntity att in attributes)
+            {
+                sb.Append($"\n{att.Type.ToString(),AttributeColumnWidth} | {att.FlatValue,FlatColumnWidth} | {FormatPercent(att.PercentValue),PercentColumnWidth}");
+            }
+            Debug.Log(sb.ToString());
+            return sb.ToString();
+        }
+
+        public string ToStringTableCompleteRich()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (AttributeType key in FinalValues.Keys)
+            {
+                sb.Append($"\n<u>{key.ToString(), -AttributeColumnWidth}   {"Flat",FlatColumnWidth}   {"Percent",PercentColumnWidth}   {"Final", FinalColumnWidth}</u>");
+
+                //sb.Append($"\n<u>{key.ToString(), -AttributeColumnWidth}   {FinalValues[key],FinalColumnWidth+ FlatColumnWidth+ PercentColumnWidth+ FinalColumnWidth}</u>");
+                AddAttributesOfType(key, sb);
+                sb.Append("\n");
+            }
+
+            Debug.Log(sb.ToString());
+            return sb.ToString();
+        }
+
+        private void AddAttributesOfType(AttributeType type, StringBuilder sb)
+        {
+            foreach (AttributeEntity att in GroupedAttributes[type])
+            {
+                sb.Append($"\n{att.Name, -AttributeColumnWidth} | {att.FlatValue,FlatColumnWidth} | {FormatPercent(att.PercentValue),PercentColumnWidth} | {FinalValues[att.Type],FinalColumnWidth} ");
+            }
+        }
+
+        private string FormatPercent(float percent)
+        {
+            if (percent >= 0)
+                return "+" + (percent * 100.0f) + "%";
+            else
+                return (percent * 100.0f) + "%";
+        }
+
 
         public bool OnNotify(IGameEvent gameEvent)
         {
