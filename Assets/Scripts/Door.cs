@@ -24,7 +24,12 @@ public class Door : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SceneManager.LoadScene(destinationScene.name);
+            StartCoroutine(Transtion());
         }
+    }
+
+    private IEnumerator Transtion()
+    {
+        yield return SceneManager.LoadSceneAsync(destinationScene.name);
     }
 }
