@@ -49,8 +49,6 @@ public class SceneController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        DontDestroyOnLoad(gameObject);
     }
 
     public static void TransitionToScene(GameObject transitioningGameObject, string destinationSceneName, string destinationTag)
@@ -60,12 +58,11 @@ public class SceneController : MonoBehaviour
 
     private IEnumerator Transtion(GameObject transitioningGameObject, string destinationSceneName, string destinationTag)
     {
-        DontDestroyOnLoad(transitioningGameObject);
+        //DontDestroyOnLoad(transitioningGameObject);
         this.transitioningGameObject = transitioningGameObject;
         this.destinationSceneName = destinationSceneName;
         this.destinationTag = destinationTag;
         this.currentScene = SceneManager.GetActiveScene();
-        print(currentScene.name);
 
         AsyncOperation scene = SceneManager.LoadSceneAsync(destinationSceneName, LoadSceneMode.Additive);
         scene.allowSceneActivation = false;
@@ -120,7 +117,6 @@ public class SceneController : MonoBehaviour
         if (destinationScene.IsValid())
         {
             Debug.Log("Scene is Valid");
-            SceneManager.MoveGameObjectToScene(this.transitioningGameObject, newScene);
             SceneManager.SetActiveScene(destinationScene);
             Door entrance = GetDestination(destinationTag);
             SetEnteringGameObjectLocation(entrance, this.transitioningGameObject);
