@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class InitialSceneLoader : MonoBehaviour
 {
+    public string defaultSceneName = "SampleScene";
+
     private void Awake()
     {
-        SceneController.Instance.LoadInitialScene();
+        SceneController.Instance.LoadDefaultScene(defaultSceneName);
     }
 }

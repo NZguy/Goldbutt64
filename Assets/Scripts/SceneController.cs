@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +14,7 @@ public class SceneController : MonoBehaviour
     private string destinationSceneName;
     private string destinationTag;
     private GameObject transitioningGameObject;
+    private string defaultSceneName;
 
     public static SceneController Instance 
     {
@@ -53,18 +52,18 @@ public class SceneController : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void LoadInitialScene()
+    public void LoadDefaultScene(string defaultSceneName)
     {
-        print("Loading Initial Scene");
+        this.defaultSceneName = defaultSceneName;
         SceneManager.sceneLoaded += initialSceneLoaded;
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(defaultSceneName);
         SceneManager.LoadScene("NeverUnload", LoadSceneMode.Additive);
     }
 
     void initialSceneLoaded(Scene newScene, LoadSceneMode loadMode)
     {
         Debug.Log("Done Loading " + newScene.name);
-        if (newScene.name != "InitialScene")
+        if (newScene.name == defaultSceneName)
         {
             SceneManager.sceneLoaded -= initialSceneLoaded;
             this.currentScene = newScene;
