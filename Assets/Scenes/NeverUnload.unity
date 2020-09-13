@@ -334,6 +334,7 @@ MonoBehaviour:
   target: {fileID: 1524961537660935003}
   smoothSpeed: 4
   offset: {x: 0, y: 25, z: -30}
+  cameraSnapFlag: 0
 --- !u!114 &1034702926 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2411711731574939, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
@@ -546,7 +547,7 @@ PrefabInstance:
     - target: {fileID: 1522587209964648039, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
       propertyPath: musicBox
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2105027760}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
 --- !u!4 &1524961537660935003 stripped
