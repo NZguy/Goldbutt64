@@ -1,28 +1,101 @@
-﻿using Assets.Scripts.Events.Base;
+﻿using Assets.Scripts.Attributes;
+using Assets.Scripts.Events.Base;
 using Assets.Scripts.Events.OnEvents;
 using Assets.Scripts.Interfaces;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : NotifierBase, ISubscriber
 {
-
     public GameObject primaryWeapon;
-
+    public AttributeManager Attributes;
     private Rigidbody rb;
-    public float speed = 10;
     private bool IsMoving;
+
+    public float Health;
 
     void Start()
     {
         this.rb = GetComponent<Rigidbody>();
+
+        // Some default attributes for testing / playing with. 
+        #region Test Attributes
+        AddAttribute(new AttributeEntity(AttributeType.AttackSpeed)
+        {
+            FlatValue = 5,
+            PercentValue = 60
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.Lives)
+        {
+            FlatValue = 1,
+            PercentValue = 0
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
+        {
+            FlatValue = 5,
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
+        {
+            FlatValue = 5,
+            PercentValue = 50.0f
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
+        {
+            FlatValue = 5,
+            PercentValue = 0
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
+        {
+            FlatValue = 5,
+            PercentValue = -90.0f
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.Health)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.HealthRegen)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+
+        AddAttribute(new AttributeEntity(AttributeType.Mana)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        AddAttribute(new AttributeEntity(AttributeType.ManaRegen)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        AddAttribute(new AttributeEntity(AttributeType.Piercing)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        AddAttribute(new AttributeEntity(AttributeType.PiercingResistance)
+        {
+            FlatValue = 10,
+            PercentValue = .5f
+        });
+        #endregion
     }
 
     void Update()
     {
         transform.rotation = GetCharacterRotation();
-        rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * speed, 0, Input.GetAxis("Vertical_Move") * speed);
+        rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * Attributes.GetValue(AttributeType.MovementSpeed), 0, Input.GetAxis("Vertical_Move") * Attributes.GetValue(AttributeType.MovementSpeed));
 
         bool IsMovingNew = rb.velocity.magnitude > 0;
         if (IsMovingNew && !IsMoving)
@@ -34,8 +107,10 @@ public class Player : NotifierBase, ISubscriber
             Notify(new OnStopMoving(this, this));
         }
 
-        IsMoving = IsMovingNew;
+        
 
+        IsMoving = IsMovingNew;
+        Debug.Log($"Number of Attributes: {Attributes.FinalValues.Count}");
         HandleAttack();
     }
 
@@ -45,7 +120,7 @@ public class Player : NotifierBase, ISubscriber
             primaryWeapon.GetComponent<Gun>().Attack(true);
         else if (Input.GetButton("Fire1"))
             primaryWeapon.GetComponent<Gun>().Attack(false);
-    } 
+    }
 
     private Quaternion GetCharacterRotation()
     {
@@ -64,6 +139,13 @@ public class Player : NotifierBase, ISubscriber
         return Quaternion.Euler(-90, -angle + 180, 0);
     }
 
+    public void AddAttribute(AttributeEntity att)
+    {
+        Attributes.Add(att);
+        // These should will be moved out of the update loop or deleted entirely when we have functionality for picking up items / applying attributes / etc.
+        Notify(new OnTextUpdate(this, "StatsAttributes", Attributes.ToStringTableCompleteRich()));
+        Notify(new OnTextUpdate(this, "StatsFinalValues", Attributes.ToStringTableFinalValues()));
+    }
     
     public bool OnNotify(IGameEvent gameEvent)
     {

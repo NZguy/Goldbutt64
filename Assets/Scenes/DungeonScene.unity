@@ -356,6 +356,14 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 207117897891623676, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1347387596227436355, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3431288022752773123, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: destinationScene
       value: 
@@ -376,6 +384,10 @@ PrefabInstance:
       propertyPath: transitioningGameObject
       value: 
       objectReference: {fileID: 2411711731574933, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+    - target: {fileID: 3533749590138338489, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4676316164819270185, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.5
@@ -459,6 +471,18 @@ PrefabInstance:
     - target: {fileID: 4676316166432097092, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: m_LocalPosition.y
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302186436166738255, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490396890620467049, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406407817134110172, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a435666c59b70be47886faf87e22a679, type: 3}

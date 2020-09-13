@@ -4,15 +4,33 @@ using UnityEngine;
 
 namespace Assets.Scripts.Attributes
 {
-    public class AttributeEntity : MonoBehaviour
+    public class AttributeEntity
     {
-        public bool RequiresUpdating { get; private set; }
-        public float FlatValue { get; private set; }
-        public float PercentValue { get; private set; }
-        public AttributeType Type { get; private set; }
+        public string Name { get; set; }
+        public bool RequiresUpdating { get; set; }
+
+        public float FlatValue { get; set; }
+
+        private float _percentValue;
+        public float PercentValue
+        {
+            get
+            {
+                return _percentValue;
+            }
+
+            set
+            {
+                _percentValue = value / 100.0f;
+            }
+        }
+
+
+        public AttributeType Type { get; set; }
 
         public AttributeEntity (AttributeType type)
         {
+            Name = "Temp Item Name";
             Type = type;
         }
 

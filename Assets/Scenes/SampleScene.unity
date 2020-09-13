@@ -1117,7 +1117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 207117897891623676, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 207117897891623676, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1159,6 +1159,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door
       objectReference: {fileID: 0}
+    - target: {fileID: 1347387596227436355, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3431288022752773123, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: destinationSceneName
       value: DungeonScene
@@ -1174,6 +1178,22 @@ PrefabInstance:
     - target: {fileID: 3431288022752773123, guid: a435666c59b70be47886faf87e22a679, type: 3}
       propertyPath: transitioningGameObject
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3533749590138338489, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5302186436166738255, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490396890620467049, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406407817134110172, guid: a435666c59b70be47886faf87e22a679, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a435666c59b70be47886faf87e22a679, type: 3}

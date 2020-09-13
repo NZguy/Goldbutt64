@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Events.OnEvents
 {
-    class OnStopMoving : EventBase
+    public class OnStopMoving : EventBase
     {
         public MonoBehaviour MovingObject { get; private set; }
 
