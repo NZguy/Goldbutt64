@@ -49,6 +49,26 @@ public class SceneController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        DontDestroyOnLoad(this);
+    }
+
+    public void LoadInitialScene()
+    {
+        print("Loading Initial Scene");
+        SceneManager.sceneLoaded += initialSceneLoaded;
+        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("NeverUnload", LoadSceneMode.Additive);
+    }
+
+    void initialSceneLoaded(Scene newScene, LoadSceneMode loadMode)
+    {
+        Debug.Log("Done Loading " + newScene.name);
+        if (newScene.name != "InitialScene")
+        {
+            SceneManager.sceneLoaded -= initialSceneLoaded;
+            this.currentScene = newScene;
+        }
     }
 
     public static void TransitionToScene(GameObject transitioningGameObject, string destinationSceneName, string destinationTag)
@@ -58,29 +78,14 @@ public class SceneController : MonoBehaviour
 
     private IEnumerator Transtion(GameObject transitioningGameObject, string destinationSceneName, string destinationTag)
     {
-        //DontDestroyOnLoad(transitioningGameObject);
         this.transitioningGameObject = transitioningGameObject;
         this.destinationSceneName = destinationSceneName;
         this.destinationTag = destinationTag;
-        this.currentScene = SceneManager.GetActiveScene();
 
-        AsyncOperation scene = SceneManager.LoadSceneAsync(destinationSceneName, LoadSceneMode.Additive);
-        scene.allowSceneActivation = false;
+        SceneManager.LoadSceneAsync(destinationSceneName, LoadSceneMode.Additive);
         SceneManager.sceneLoaded += SceneLoaded;
 
-        while (scene.progress < 0.9f)
-        {
-            Debug.Log("Loading scene " + " [][] Progress: " + scene.progress);
-            yield return null;
-        }
-
-        scene.allowSceneActivation = true;
-
-        while (!scene.isDone)
-        {
-            // wait until it is really finished
-            yield return null;
-        }
+        yield return null;
     }
 
     private Door GetDestination(string destinationTag)
@@ -112,7 +117,7 @@ public class SceneController : MonoBehaviour
     {
         SceneManager.sceneLoaded -= SceneLoaded;
         
-        Debug.Log("Done Loading Scene");
+        Debug.Log("Done Loading " + newScene.name);
         Scene destinationScene = SceneManager.GetSceneByName(destinationSceneName);
         if (destinationScene.IsValid())
         {
@@ -121,8 +126,15 @@ public class SceneController : MonoBehaviour
             Door entrance = GetDestination(destinationTag);
             SetEnteringGameObjectLocation(entrance, this.transitioningGameObject);
             GameObject.FindWithTag("MainCamera").GetComponent<CameraFollow>().cameraSnapFlag = true;
+            SceneManager.sceneUnloaded += SceneUnloaded;
             SceneManager.UnloadSceneAsync(currentScene);
+            
         }
         Debug.Log("Scene Activated!");
+    }
+
+    void SceneUnloaded(Scene oldScene)
+    {
+        this.currentScene = GetDestination(destinationTag).gameObject.scene;
     }
 }

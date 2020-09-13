@@ -110,7 +110,7 @@ public class Player : NotifierBase, ISubscriber
         
 
         IsMoving = IsMovingNew;
-        Debug.Log($"Number of Attributes: {Attributes.FinalValues.Count}");
+        //Debug.Log($"Number of Attributes: {Attributes.FinalValues.Count}");
         HandleAttack();
     }
 
