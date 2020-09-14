@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Events.OnEvents;
+﻿using Assets.Scripts.Attributes;
+using Assets.Scripts.Events.OnEvents;
 using Assets.Scripts.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using UnityEngine.UIElements;
 
 public class AddAttributesToList : MonoBehaviour, ISubscriber
 {
-    public Player player;
+    private Player player;
     public ScrollRect ScrollView;
     public GameObject ScrollContent;
     public GameObject prefab;
@@ -18,11 +19,30 @@ public class AddAttributesToList : MonoBehaviour, ISubscriber
     {
         if (gameEvent is OnAttributeAdd attAddEvent)
         {
+
+
+            /////////////
+            /// This needs to be replaced by a parent class that overrides whatever unload/dispose method unity uses to also unsubscribe events.
+            if (ScrollView == null)
+            {
+                //Debug.Log("Scrollview was null");
+                return true;
+            }
+
+            if (ScrollContent == null)
+            {
+                //Debug.Log("ScrollContent was null");
+                return true;
+            }
+            /////////////
+
             var newAttribute = Instantiate(prefab);
             newAttribute.GetComponent<AttributeRemove>().parent = (Player)attAddEvent.EventCreater;
             newAttribute.GetComponent<AttributeRemove>().attribute = attAddEvent.Attribute;
             newAttribute.transform.SetParent(ScrollContent.transform, false);
             newAttribute.SetActive(true);
+
+            
 
             var title = newAttribute.transform.Find("Panel").transform.Find("Title").GetComponent<TextMeshProUGUI>();
             var details = newAttribute.transform.Find("Panel").transform.Find("Details").GetComponent<TextMeshProUGUI>();
@@ -35,6 +55,13 @@ public class AddAttributesToList : MonoBehaviour, ISubscriber
 
     void Start()
     {
+        player = GameObject.Find("Player").GetComponent<Player>();
         player.Subscribe(new OnAttributeAdd(null, null), this);
+        
+        foreach (AttributeEntity att in player.GetAttributes())
+        {
+            OnNotify(new OnAttributeAdd(player, att));
+        }
+
     }
 }

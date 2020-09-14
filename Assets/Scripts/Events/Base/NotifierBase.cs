@@ -94,9 +94,18 @@ namespace Assets.Scripts.Events.Base
 
         private void UnsubscribePending()
         {
-            foreach ((IGameEvent gameEvent, ISubscriber subscriber) remove in PendingRemoval)
+            try
             {
-                UnSubscribe(remove.gameEvent, remove.subscriber);
+
+                foreach ((IGameEvent gameEvent, ISubscriber subscriber) remove in PendingRemoval)
+                {
+                    UnSubscribe(remove.gameEvent, remove.subscriber);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"[ERROR] Failed while notifying subscribers");
+                Debug.Log($"[ERROR]{e.Message}");
             }
         }
 
@@ -106,12 +115,12 @@ namespace Assets.Scripts.Events.Base
             try
             {
                 IsBusyNotifying = true;
-                if (Subscribed.ContainsKey(gameEvent.GetType()))
+                if (Subscribed != null && Subscribed.ContainsKey(gameEvent.GetType()))
                 {
                     foreach (ISubscriber sub in Subscribed[gameEvent.GetType()])
                     {
                         
-                        if (sub.OnNotify(gameEvent))
+                        if (sub != null && sub.OnNotify(gameEvent))
                             UnSubscribe(gameEvent, sub);
                     }
                 }

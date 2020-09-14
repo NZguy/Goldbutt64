@@ -4,6 +4,7 @@ using Assets.Scripts.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -12,6 +13,13 @@ namespace Assets.Scripts.Attributes
 
     public class AttributeManager : NotifierBase, ISubscriber
     {
+
+        public List<AttributeEntity> GetAttributes()
+        {
+            return attributes.ToList();
+        }
+
+
         private NotifierBase Parent;
         private HashSet<AttributeEntity> attributes = new HashSet<AttributeEntity>();
         private HashSet<AttributeEntity> attributesNeedingUpdates = new HashSet<AttributeEntity>();

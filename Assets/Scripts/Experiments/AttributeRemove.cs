@@ -14,6 +14,7 @@ public class AttributeRemove : MonoBehaviour
 
     void Start()
     {
+        parent = GameObject.Find("Player").GetComponent<Player>();
     }
 
     public void RemoveAttribute()

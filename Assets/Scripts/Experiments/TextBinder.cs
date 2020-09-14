@@ -12,7 +12,7 @@ using UnityEngine.UI;
 public class TextBinder : MonoBehaviour, ISubscriber
 {
     public TextMeshProUGUI Text;
-    public NotifierBase Parent;
+    private NotifierBase Parent;
     public string[] startTags;
     public string[] endTags;
 
@@ -54,6 +54,7 @@ public class TextBinder : MonoBehaviour, ISubscriber
 
     void Start()
     {
+        Parent = GameObject.Find("Player").GetComponent<Player>();
         Parent.Subscribe(new OnTextUpdate(null, null, null), this);
         Array.Reverse(endTags);
     }

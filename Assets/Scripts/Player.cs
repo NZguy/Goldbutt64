@@ -155,7 +155,13 @@ public class Player : NotifierBase, ISubscriber
         Notify(new OnTextUpdate(this, "StatsFinalValues", Attributes.ToStringTableFinalValues()));
         Notify(new OnAttributeRemove(this, att));
     }
-    
+
+    public List<AttributeEntity> GetAttributes()
+    {
+        return Attributes.GetAttributes();
+    }
+
+
     public bool OnNotify(IGameEvent gameEvent)
     {
         throw new System.NotImplementedException();
