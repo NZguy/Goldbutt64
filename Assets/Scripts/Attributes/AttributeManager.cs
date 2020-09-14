@@ -139,7 +139,6 @@ namespace Assets.Scripts.Attributes
             {
                 sb.Append($"\n{key.ToString(), AttributeColumnWidth} | {FinalValues[key], FinalColumnWidth}");
             }
-            Debug.Log(sb.ToString());
             return sb.ToString();
         }
 
@@ -151,7 +150,6 @@ namespace Assets.Scripts.Attributes
             {
                 sb.Append($"\n{att.Type.ToString(),AttributeColumnWidth} | {att.FlatValue,FlatColumnWidth} | {FormatPercent(att.PercentValue),PercentColumnWidth}");
             }
-            Debug.Log(sb.ToString());
             return sb.ToString();
         }
 
@@ -160,12 +158,14 @@ namespace Assets.Scripts.Attributes
             StringBuilder sb = new StringBuilder();
             foreach (AttributeType key in FinalValues.Keys)
             {
-                sb.Append($"\n<u>{AttributeEnumsExtended.GetTypeInfoFrom(key, key.GetType()).DisplayName, -AttributeColumnWidth}   {"Flat",FlatColumnWidth}   {"Percent",PercentColumnWidth}   {"Final", FinalColumnWidth}</u>");
-                AddAttributesOfType(key, sb);
-                sb.Append("\n");
+                if (GroupedAttributes[key].Count > 0)
+                {
+                    sb.Append($"\n<u>{AttributeEnumsExtended.GetTypeInfoFrom(key, key.GetType()).DisplayName, -AttributeColumnWidth}   {"Flat",FlatColumnWidth}   {"Percent",PercentColumnWidth}   {"Final", FinalColumnWidth}</u>");
+                    AddAttributesOfType(key, sb);
+                    sb.Append("\n");
+                }
             }
 
-            Debug.Log(sb.ToString());
             return sb.ToString();
         }
 

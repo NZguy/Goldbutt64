@@ -145,6 +145,15 @@ public class Player : NotifierBase, ISubscriber
         // These should will be moved out of the update loop or deleted entirely when we have functionality for picking up items / applying attributes / etc.
         Notify(new OnTextUpdate(this, "StatsAttributes", Attributes.ToStringTableCompleteRich()));
         Notify(new OnTextUpdate(this, "StatsFinalValues", Attributes.ToStringTableFinalValues()));
+        Notify(new OnAttributeAdd(this, att));
+    }
+
+    public void RemoveAttribute(AttributeEntity att)
+    {
+        Attributes.Remove(att);
+        Notify(new OnTextUpdate(this, "StatsAttributes", Attributes.ToStringTableCompleteRich()));
+        Notify(new OnTextUpdate(this, "StatsFinalValues", Attributes.ToStringTableFinalValues()));
+        Notify(new OnAttributeRemove(this, att));
     }
     
     public bool OnNotify(IGameEvent gameEvent)
