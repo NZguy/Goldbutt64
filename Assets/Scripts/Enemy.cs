@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿
+using UnityEditor;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -14,10 +15,10 @@ public class Enemy : MonoBehaviour
     private Rigidbody rb;
 
     public float moveTimer;
-    private bool canMove;
+    public bool canMove;
     private float curMoveTimer;
 
-    private void Start()
+    public void Start()
     {
         this.canMove = true;
         this.curMoveTimer = 0;
@@ -31,7 +32,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Update()
+    public virtual void Update()
     {
         if (canMove)
         {
@@ -61,12 +62,12 @@ public class Enemy : MonoBehaviour
     {
         if (other != null && other.collider.tag == "Player")
         {
-            this.canMove = false;
+            this.canMove = true;
             this.curMoveTimer = moveTimer;
         }
         else if (other != null && other.collider.tag == "Wall")
         {
-            this.rb.velocity = this.rb.velocity * 1.8f;
+            //this.rb.velocity = this.rb.velocity * 1.8f;
             if (canDupe)
             {
                 Instantiate(enemyPrefab, transform.position, Quaternion.identity);
