@@ -261,6 +261,7 @@ MonoBehaviour:
   musicBox: {fileID: 0}
   attackOffCooldown: 0
   attackRate: 0.5
+  Projectile: {fileID: 0}
 --- !u!1 &1522587210631902172
 GameObject:
   m_ObjectHideFlags: 0

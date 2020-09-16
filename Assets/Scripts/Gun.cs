@@ -14,6 +14,8 @@ public class Gun : MonoBehaviour
     public bool attackOffCooldown;
     public float attackRate = 0.5f;
 
+    public GameObject Projectile;
+
     private void Start()
     {
         attackOffCooldown = true;
@@ -31,8 +33,17 @@ public class Gun : MonoBehaviour
     {
         attackOffCooldown = false;
         musicBox.GetComponent<MusicBox>().playShootSound();
+        
         bulletTrail.Play();
 
+        GameObject bullet = Instantiate(Projectile) as GameObject;
+        bullet.transform.position = this.transform.position;
+        bullet.transform.rotation = this.transform.rotation;
+        //bullet.GetComponent<Projectile>().dir = this.transform.eulerAngles;
+
+
+
+        /*
         RaycastHit hit;
         if (Physics.Raycast(shootCam.transform.position, shootCam.transform.forward, out hit, range))
         {
@@ -44,8 +55,10 @@ public class Gun : MonoBehaviour
                 enemy.TakeDamage(damage);
             }
         }
+        */
 
         yield return new WaitForSeconds(attackRate);
         attackOffCooldown = true;
+        
     }
 }
