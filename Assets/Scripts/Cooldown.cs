@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cooldown : MonoBehaviour
+public class Cooldown
 {
     public float BaseCooldownTime;
     public float RemainingTime;
+
+    public Cooldown(float val, bool startCool)
+    {
+        if (startCool) RemainingTime = val;
+        BaseCooldownTime = val; // temp
+    }
 
     public Cooldown()
     {
@@ -19,7 +25,6 @@ public class Cooldown : MonoBehaviour
 
     public void Update()
     {
-        Debug.Log($"Remaining Time: {RemainingTime}");
         if (!IsCool)
             RemainingTime -= Time.deltaTime;
     }
