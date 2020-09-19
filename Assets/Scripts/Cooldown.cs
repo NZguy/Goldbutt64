@@ -5,11 +5,23 @@ using UnityEngine;
 public class Cooldown
 {
     public float BaseCooldownTime;
-    public float RemainingTime;
+    private float CompletionTime;
+    private float StartTime;
 
-    public Cooldown(float val, bool startCool)
+    public float RemainingTime {
+        get
+        {
+            return CompletionTime - Time.realtimeSinceStartup;
+        }
+    }
+
+
+    //private float time;
+
+    public Cooldown(float val, float delayStart = 0)
     {
-        if (startCool) RemainingTime = val;
+        StartTime = Time.realtimeSinceStartup;
+        CompletionTime = StartTime + delayStart;
         BaseCooldownTime = val; // temp
     }
 
@@ -20,15 +32,10 @@ public class Cooldown
 
     public void StartCooldown()
     {
-        RemainingTime = BaseCooldownTime;
+        StartTime = Time.realtimeSinceStartup;
+        CompletionTime = StartTime + BaseCooldownTime;
     }
-
-    public void Update()
-    {
-        if (!IsCool)
-            RemainingTime -= Time.deltaTime;
-    }
-
+    
     public bool IsCool
     {
         get
@@ -36,4 +43,27 @@ public class Cooldown
             return RemainingTime <= 0;
         }
     }
+
+
+
+    #region
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>The max value between the seconds remaining until cool or 0</returns>
+    public float SecondsRemaining()
+    {
+        return Mathf.Max(CompletionTime, 0);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>The completion percent for this cooldown object</returns>
+    public float PercentComplete()
+    {
+        return Mathf.Min((Time.realtimeSinceStartup / CompletionTime) * 100, 100);
+    }
+    #endregion
+
 }

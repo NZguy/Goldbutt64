@@ -25,7 +25,7 @@ public class Projectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cleanUpTimer = new Cooldown(15f, true);
+        cleanUpTimer = new Cooldown(15f, 15f);
         sMod = new SplitMod(splitsInto, this.gameObject);
         //aim = new Vector3(Gun.transform.position.x, Gun.transform.position.y, Gun.transform.position.z);
         this.GetComponent<Rigidbody>().velocity = this.transform.TransformDirection(Vector3.up*speed);

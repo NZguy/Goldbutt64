@@ -13,12 +13,11 @@ public class SplitMod
     {
         parObj = par;
         splitsInto = split;
-        timer = new Cooldown(2f, true);
+        timer = new Cooldown(2f, 2f);
     }
 
     public void Update()
     {
-        timer.Update();
         if (timer.IsCool)
         {
             GameObject newProj = GameObject.Instantiate(splitsInto, parObj.transform.position, Quaternion.identity);
