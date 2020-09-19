@@ -19,83 +19,39 @@ public class Player : NotifierBase, ISubscriber
     void Start()
     {
         this.rb = GetComponent<Rigidbody>();
-
-        // Some default attributes for testing / playing with. 
+        Attributes.Parent = this;
         #region Test Attributes
+
+        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
+        {
+            FlatValue = 20,
+            PercentValue = 1
+        });
+
         AddAttribute(new AttributeEntity(AttributeType.AttackSpeed)
         {
             FlatValue = 5,
             PercentValue = 60
         });
 
-        AddAttribute(new AttributeEntity(AttributeType.Lives)
+        AddAttribute(new AttributeEntity(AttributeType.Size)
         {
-            FlatValue = 1,
+            FlatValue = 100,
             PercentValue = 0
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
-        {
-            FlatValue = 5,
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
-        {
-            FlatValue = 5,
-            PercentValue = 50.0f
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
-        {
-            FlatValue = 5,
-            PercentValue = 0
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
-        {
-            FlatValue = 5,
-            PercentValue = -90.0f
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.Health)
-        {
-            FlatValue = 10,
-            PercentValue = .5f
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.HealthRegen)
-        {
-            FlatValue = 10,
-            PercentValue = .5f
-        });
-
-        AddAttribute(new AttributeEntity(AttributeType.Mana)
-        {
-            FlatValue = 10,
-            PercentValue = .5f
-        });
-        AddAttribute(new AttributeEntity(AttributeType.ManaRegen)
-        {
-            FlatValue = 10,
-            PercentValue = .5f
-        });
-        AddAttribute(new AttributeEntity(AttributeType.Piercing)
-        {
-            FlatValue = 10,
-            PercentValue = .5f
-        });
-        AddAttribute(new AttributeEntity(AttributeType.PiercingResistance)
-        {
-            FlatValue = 10,
-            PercentValue = .5f
         });
         #endregion
+
+
+        // Some default attributes for testing / playing with. 
     }
 
     void Update()
     {
+
+
         transform.rotation = GetCharacterRotation();
         rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * Attributes.GetValue(AttributeType.MovementSpeed), 0, Input.GetAxis("Vertical_Move") * Attributes.GetValue(AttributeType.MovementSpeed));
+        this.transform.localScale = new Vector3(Attributes.GetValue(AttributeType.Size), Attributes.GetValue(AttributeType.Size), Attributes.GetValue(AttributeType.Size));
 
         bool IsMovingNew = rb.velocity.magnitude > 0;
         if (IsMovingNew && !IsMoving)
@@ -112,6 +68,7 @@ public class Player : NotifierBase, ISubscriber
         IsMoving = IsMovingNew;
         //Debug.Log($"Number of Attributes: {Attributes.FinalValues.Count}");
         HandleAttack();
+
     }
 
     private void HandleAttack()
@@ -142,18 +99,11 @@ public class Player : NotifierBase, ISubscriber
     public void AddAttribute(AttributeEntity att)
     {
         Attributes.Add(att);
-        // These should will be moved out of the update loop or deleted entirely when we have functionality for picking up items / applying attributes / etc.
-        Notify(new OnTextUpdate(this, "StatsAttributes", Attributes.ToStringTableCompleteRich()));
-        Notify(new OnTextUpdate(this, "StatsFinalValues", Attributes.ToStringTableFinalValues()));
-        Notify(new OnAttributeAdd(this, att));
     }
 
     public void RemoveAttribute(AttributeEntity att)
     {
         Attributes.Remove(att);
-        Notify(new OnTextUpdate(this, "StatsAttributes", Attributes.ToStringTableCompleteRich()));
-        Notify(new OnTextUpdate(this, "StatsFinalValues", Attributes.ToStringTableFinalValues()));
-        Notify(new OnAttributeRemove(this, att));
     }
 
     public List<AttributeEntity> GetAttributes()

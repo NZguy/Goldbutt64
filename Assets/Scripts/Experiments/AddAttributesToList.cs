@@ -20,7 +20,6 @@ public class AddAttributesToList : MonoBehaviour, ISubscriber
         if (gameEvent is OnAttributeAdd attAddEvent)
         {
 
-
             /////////////
             /// This needs to be replaced by a parent class that overrides whatever unload/dispose method unity uses to also unsubscribe events.
             if (ScrollView == null)
@@ -35,18 +34,15 @@ public class AddAttributesToList : MonoBehaviour, ISubscriber
                 return true;
             }
             /////////////
-
             var newAttribute = Instantiate(prefab);
-            newAttribute.GetComponent<AttributeRemove>().parent = (Player)attAddEvent.EventCreater;
+            //newAttribute.GetComponent<AttributeRemove>().parent = (Player)attAddEvent.EventCreater;
             newAttribute.GetComponent<AttributeRemove>().attribute = attAddEvent.Attribute;
             newAttribute.transform.SetParent(ScrollContent.transform, false);
             newAttribute.SetActive(true);
 
-            
 
             var title = newAttribute.transform.Find("Panel").transform.Find("Title").GetComponent<TextMeshProUGUI>();
             var details = newAttribute.transform.Find("Panel").transform.Find("Details").GetComponent<TextMeshProUGUI>();
-
             title.text = attAddEvent.Attribute.Name;
             details.text = $"Flat:{attAddEvent.Attribute.FlatValue} Percent:{attAddEvent.Attribute.PercentValue}";
         }

@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Assets.Scripts.Attributes
 {
 
-    public class AttributeManager : NotifierBase, ISubscriber
+    public class AttributeManager : NotifierBase//, ISubscriber
     {
 
         public List<AttributeEntity> GetAttributes()
@@ -19,8 +19,6 @@ namespace Assets.Scripts.Attributes
             return attributes.ToList();
         }
 
-
-        private NotifierBase Parent;
         private HashSet<AttributeEntity> attributes = new HashSet<AttributeEntity>();
         private HashSet<AttributeEntity> attributesNeedingUpdates = new HashSet<AttributeEntity>();
         private Dictionary<AttributeType, float> PercentValues = new Dictionary<AttributeType, float>();
@@ -46,7 +44,6 @@ namespace Assets.Scripts.Attributes
 
             if (IsStale || attributesNeedingUpdates.Count > 0)
                 CalculateFinalValues();
-            Notify(new OnAttributeAdd(this, null));
         }
 
         #region Add Methods
@@ -75,6 +72,10 @@ namespace Assets.Scripts.Attributes
                     FlatValues.Add(att.Type, att.FlatValue);
                     FinalValues.Add(att.Type, 0);
                 }
+
+                Notify(new OnTextUpdate(this, "StatsAttributes", ToStringTableCompleteRich()));
+                Notify(new OnTextUpdate(this, "StatsFinalValues", ToStringTableFinalValues()));
+                Notify(new OnAttributeAdd(this, att));
             }
         }
         public void Add(List<AttributeEntity> atts)
@@ -101,6 +102,9 @@ namespace Assets.Scripts.Attributes
         #region Remove Methods
         public void Remove(AttributeEntity att)
         {
+            if (att == null)
+                return;
+
             if (attributes.Contains(att))
             {
                 IsStale = true;
@@ -109,6 +113,9 @@ namespace Assets.Scripts.Attributes
                 FlatValues[att.Type] -= att.FlatValue;
                 GroupedAttributes[att.Type].Remove(att);
 
+                Notify(new OnTextUpdate(this, "StatsAttributes", ToStringTableCompleteRich()));
+                Notify(new OnTextUpdate(this, "StatsFinalValues", ToStringTableFinalValues()));
+                Notify(new OnAttributeRemove(this, att));
             }
             else
             {
@@ -194,21 +201,6 @@ namespace Assets.Scripts.Attributes
         }
 
 
-        public bool OnNotify(IGameEvent gameEvent)
-        {
-            if (gameEvent is OnAttributeRemove)
-            {
-                OnAttributeRemove evnt = (OnAttributeRemove)gameEvent;
-                Remove(evnt.Attribute);
-            }
-            else
-            if (gameEvent is OnAttributeAdd)
-            {
-                OnAttributeAdd evnt = (OnAttributeAdd)gameEvent;
-                Remove(evnt.Attribute);
-            }
-            return false;
-        }
         #endregion
     }
 }

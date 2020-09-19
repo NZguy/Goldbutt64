@@ -10,38 +10,30 @@ using UnityEngine;
 
 public enum AttributeType
 {
-    // MISC
+    [TypeInfoAttribute(DisplayName = "Movement Speed", Description = "The rate at which a character is able to move.", DefaultFlatValue = 10, DefaultPercentValue = 100)]
+    MovementSpeed,
+
+    [TypeInfoAttribute(DisplayName = "Attack Speed", Description = "The rate at which a character is able to attack.", DefaultFlatValue = 1, DefaultPercentValue = 100)]
+    AttackSpeed,
+
+    [TypeInfoAttribute(DisplayName = "Projectile Lifespan", Description = "The maximum time in seconds a projectile will exist for.", DefaultFlatValue = 10, DefaultPercentValue = 100)]
+    ProjectileLifeSpan,
+    
     [TypeInfoAttribute(DisplayName = "Snakes", Description = "?")]
     Snakes,
 
-    // Base Character Stats
-    [TypeInfoAttribute(DisplayName = "Health", Description = "The Maximum base character health.", DefaultFlatValue = 100)]
-    Health,
-    [TypeInfoAttribute(DisplayName = "Health Regeneration", Description = "The rate at which a character passively regains health.")]
-    HealthRegen,
-    [TypeInfoAttribute(DisplayName = "Mana", Description = "The Maximum base character mana.", DefaultFlatValue = 100)]
-    Mana,
-    [TypeInfoAttribute(DisplayName = "Mana Regeneration", Description = "The rate at which a character passively regains mana.")]
-    ManaRegen,
-    [TypeInfoAttribute(DisplayName = "Movement Speed", Description = "The rate at which a character is able to move.", DefaultFlatValue = 10, DefaultPercentValue = 100)]
-    MovementSpeed,
-    [TypeInfoAttribute(DisplayName = "Attack Speed", Description = "The rate at which a character is able to attack.", DefaultFlatValue = 1, DefaultPercentValue = 100)]
-    AttackSpeed,
-    [TypeInfoAttribute(DisplayName = "Lives", Description = "The Lives a character has remaining.", DefaultFlatValue = 1)]
-    Lives,
-    [TypeInfoAttribute(DisplayName = "Size", Description = "Character Size Scale", DefaultFlatValue = 1)]
+    [TypeInfoAttribute(DisplayName = "Size", Description = "?", DefaultFlatValue = 1, DefaultPercentValue = 100)]
     Size,
-
-
-    // Offensive Ability / Resistances
-    [TypeInfoAttribute(DisplayName = "Snakes", Description = "?")]
-    Piercing,
-    [TypeInfoAttribute(DisplayName = "Snakes", Description = "?")]
-    PiercingResistance,
-
-    [TypeInfoAttribute(DisplayName = "Critical Hit Chance", Description = "The likelihood of getting a critical hit.")]
-    CritChance,
 }
+    //Health,
+    //HealthRegen,
+    //Mana,
+    //ManaRegen,
+    //Lives,
+    //Size,
+    //Piercing,
+    //PiercingResistance,
+    //CritChance,
 
 public sealed class TypeInfoAttribute : Attribute // (C#/.NET Attribute - not our Attribute)
 {

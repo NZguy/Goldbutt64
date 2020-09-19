@@ -11,7 +11,8 @@ namespace Assets.Scripts.Events.OnEvents
 {
     class OnAttributeAdd : EventBase
     {
-        public AttributeEntity Attribute; 
+        public AttributeEntity Attribute { get; set; }
+
         public OnAttributeAdd(INotifier self, AttributeEntity attribute) : base(self)
         {
             Attribute = attribute;

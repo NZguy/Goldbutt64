@@ -552,6 +552,45 @@ PrefabInstance:
     - target: {fileID: 8360810502672505448, guid: 719b9ffba72a8604e9afcf50d282092c, type: 3}
       propertyPath: m_Name
       value: Player
+    - target: {fileID: 2411711731574936, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587209964648032, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_Name
+      value: Gun
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587209964648032, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587209964648039, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: musicBox
+      value: 
+      objectReference: {fileID: 2105027760}
+    - target: {fileID: 1522587209964648039, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: Projectile
+      value: 
+      objectReference: {fileID: 9180623448857620240, guid: fec25344edced8447bc59deb7a5bedde, type: 3}
+    - target: {fileID: 1522587209964648043, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.008711649
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587209964648043, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.008711649
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587209964648043, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.008711649
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587210631902172, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1522587211324750103, guid: 6c6fd542d8948594089eeb7f1ffe20f0, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 719b9ffba72a8604e9afcf50d282092c, type: 3}

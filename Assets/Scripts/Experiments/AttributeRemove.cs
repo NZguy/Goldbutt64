@@ -19,7 +19,8 @@ public class AttributeRemove : MonoBehaviour
 
     public void RemoveAttribute()
     {
-        parent.RemoveAttribute(attribute);
+        if (parent != null)
+            parent.RemoveAttribute(attribute);
         Destroy(parentPanel);
     }
 }
