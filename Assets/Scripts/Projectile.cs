@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour
     public GameObject splitsInto;
     // public Vector3 dir;
     public int damage = 0;
-    public float speed = 1;
+    public float speed = 100;
     private int bounces = 0;
     public int bounceLimit = 0;
     // true if hitting an agent counts as bounce
@@ -22,17 +22,20 @@ public class Projectile : MonoBehaviour
     public bool splitOnFire = false;
     public SplitMod sMod;
 
-    // Start is called before the first frame update
     void Start()
     {
         cleanUpTimer = new Cooldown(15f, 15f);
         sMod = new SplitMod(splitsInto, this.gameObject);
-        //aim = new Vector3(Gun.transform.position.x, Gun.transform.position.y, Gun.transform.position.z);
-        this.GetComponent<Rigidbody>().velocity = this.transform.TransformDirection(Vector3.up*speed);
+        this.GetComponent<Rigidbody>().velocity = this.transform.forward * speed;
     }
-    // Update is called once per frame
+
     void Update()
     {
+        // Forces the projectile to face it's move direction
+        // May want to make this smoother later if we have none spherical bullets
+        transform.LookAt(this.GetComponent<Rigidbody>().velocity + transform.position);
+
+
         if (cleanUpTimer.IsCool) Die();
         // if (bounces >= bounceLimit) Destroy(this.gameObject);
         if (bounces >= bounceLimit) Die();

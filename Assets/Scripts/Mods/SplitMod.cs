@@ -20,8 +20,14 @@ public class SplitMod
     {
         if (timer.IsCool)
         {
-            GameObject newProj = GameObject.Instantiate(splitsInto, parObj.transform.position, Quaternion.identity);
-            newProj.transform.Rotate(new Vector3(45,0,0));
+            Quaternion newRotation = parObj.transform.rotation;
+            newRotation *= Quaternion.Euler(0, 15, 0);
+            GameObject newProj = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
+
+            newRotation = parObj.transform.rotation;
+            newRotation *= Quaternion.Euler(0, -15, 0);
+            GameObject newProj2 = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
+
             timer.StartCooldown();
         }
     }

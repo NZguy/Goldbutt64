@@ -51,6 +51,8 @@ public class Player : NotifierBase, ISubscriber
 
         transform.rotation = GetCharacterRotation();
         rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * Attributes.GetValue(AttributeType.MovementSpeed), 0, Input.GetAxis("Vertical_Move") * Attributes.GetValue(AttributeType.MovementSpeed));
+
+
         this.transform.localScale = new Vector3(Attributes.GetValue(AttributeType.Size), Attributes.GetValue(AttributeType.Size), Attributes.GetValue(AttributeType.Size));
 
         bool IsMovingNew = rb.velocity.magnitude > 0;
@@ -62,10 +64,10 @@ public class Player : NotifierBase, ISubscriber
         {   // Just stopped moving - better let my many subscribers know!
             Notify(new OnStopMoving(this, this));
         }
+        IsMoving = IsMovingNew;
 
         
 
-        IsMoving = IsMovingNew;
         //Debug.Log($"Number of Attributes: {Attributes.FinalValues.Count}");
         HandleAttack();
 
@@ -93,7 +95,7 @@ public class Player : NotifierBase, ISubscriber
         }
         var relativePos = targetPos - transform.position;
         var angle = Mathf.Atan2(relativePos.z, relativePos.x) * Mathf.Rad2Deg;
-        return Quaternion.Euler(-90, -angle + 180, 0);
+        return Quaternion.Euler(0, -angle + 180, 0);
     }
 
     public void AddAttribute(AttributeEntity att)

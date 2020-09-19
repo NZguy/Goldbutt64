@@ -36,9 +36,7 @@ public class Gun : MonoBehaviour
         
         bulletTrail.Play();
 
-        GameObject bullet = Instantiate(Projectile) as GameObject;
-        bullet.transform.position = this.transform.position;
-        bullet.transform.rotation = this.transform.rotation;
+        GameObject bullet = Instantiate(Projectile, this.transform.position, this.transform.rotation) as GameObject;
         //bullet.GetComponent<Projectile>().dir = this.transform.eulerAngles;
 
 
