@@ -13,7 +13,7 @@ public class SplitMod
     {
         parObj = par;
         splitsInto = split;
-        timer = new Cooldown(2f, 2f);
+        timer = new Cooldown(10f, 2f);
     }
 
     public void Update()
@@ -24,9 +24,9 @@ public class SplitMod
             newRotation *= Quaternion.Euler(0, 15, 0);
             GameObject newProj = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
 
-            newRotation = parObj.transform.rotation;
-            newRotation *= Quaternion.Euler(0, -15, 0);
-            GameObject newProj2 = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
+            //newRotation = parObj.transform.rotation;
+            //newRotation *= Quaternion.Euler(0, -15, 0);
+            //GameObject newProj2 = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
 
             timer.StartCooldown();
         }
