@@ -297,7 +297,7 @@ MonoBehaviour:
   splitsInto: {fileID: 9180623448857620240}
   damage: 10
   speed: 10
-  bounceLimit: 2
+  bounceLimit: 1
   agentBounce: 0
   splits: 1
   splitOnColl: 1

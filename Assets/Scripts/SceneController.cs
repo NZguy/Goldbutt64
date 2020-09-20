@@ -108,7 +108,7 @@ public class SceneController : MonoBehaviour
         }
         Transform entranceLocation = entrance.transform.parent;
         Transform enteringTransform = transitioningGameObject.transform;
-        enteringTransform.position = entranceLocation.position - (entranceLocation.transform.right * 4);
+        enteringTransform.position = entranceLocation.position - (entranceLocation.transform.right * 4) + new Vector3(0,2,0);
         enteringTransform.rotation = entranceLocation.rotation;
     }
 
