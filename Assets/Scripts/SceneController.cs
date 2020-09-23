@@ -15,6 +15,7 @@ public class SceneController : MonoBehaviour
     private string destinationTag;
     private GameObject transitioningGameObject;
     private string defaultSceneName;
+    private bool isTransitioningLevel;
 
     public static SceneController Instance 
     {
@@ -50,6 +51,8 @@ public class SceneController : MonoBehaviour
         }
 
         DontDestroyOnLoad(this);
+
+        this.isTransitioningLevel = false;
     }
 
     public void LoadDefaultScene(string defaultSceneName)
@@ -72,7 +75,11 @@ public class SceneController : MonoBehaviour
 
     public static void TransitionToScene(GameObject transitioningGameObject, string destinationSceneName, string destinationTag)
     {
-        Instance.StartCoroutine(Instance.Transtion(transitioningGameObject, destinationSceneName, destinationTag));
+        if(Instance.isTransitioningLevel == false)
+        {
+            Instance.isTransitioningLevel = true;
+            Instance.StartCoroutine(Instance.Transtion(transitioningGameObject, destinationSceneName, destinationTag));
+        }
     }
 
     private IEnumerator Transtion(GameObject transitioningGameObject, string destinationSceneName, string destinationTag)
@@ -108,7 +115,7 @@ public class SceneController : MonoBehaviour
         }
         Transform entranceLocation = entrance.transform.parent;
         Transform enteringTransform = transitioningGameObject.transform;
-        enteringTransform.position = entranceLocation.position - (entranceLocation.transform.right * 4) + new Vector3(0,2,0);
+        enteringTransform.position = entranceLocation.position - (entranceLocation.transform.right * 4) + new Vector3(0,0,0);
         enteringTransform.rotation = entranceLocation.rotation;
     }
 
@@ -127,8 +134,8 @@ public class SceneController : MonoBehaviour
             GameObject.FindWithTag("MainCamera").GetComponent<CameraFollow>().cameraSnapFlag = true;
             SceneManager.sceneUnloaded += SceneUnloaded;
             SceneManager.UnloadSceneAsync(currentScene);
-            
         }
+        Instance.isTransitioningLevel = false;
         Debug.Log("Scene Activated!");
     }
 

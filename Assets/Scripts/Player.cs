@@ -36,7 +36,7 @@ public class Player : NotifierBase, ISubscriber
 
         AddAttribute(new AttributeEntity(AttributeType.Size)
         {
-            FlatValue = 100,
+            FlatValue = 1,
             PercentValue = 0
         });
         #endregion
