@@ -95,7 +95,13 @@ public class Gun : GameBase
         sMod2.ChildMods.Add(sMod3);
         sMod1.ChildMods.Add(sMod2);
 
-        List<SplitMod> mods = new List<SplitMod>();
+        List<AttributeEntity> temp = new List<AttributeEntity>();
+        temp.AddRange(GetAttributes());
+        temp.Add(new AttributeEntity(AttributeType.ModSpecificModifier1, 1f, 0));
+        temp.Add(new AttributeEntity(AttributeType.ModSpecificModifier2, .5f, 0));
+        sMod1.ChildMods.Add(new ReboundMod(temp, projectile));
+
+        List<Mod> mods = new List<Mod>();
         mods.Add(sMod1);
         projectile.Init(GetAttributes(), mods);
 

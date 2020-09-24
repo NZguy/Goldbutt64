@@ -5,32 +5,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class SplitMod
+public class SplitMod : Mod
 {
-
-    public AttributesManagerLite Attributes;
-
     // ModSpecificModifier1 == Number of Times to split projectile
     // ModSpecificModifier2 == Angle between splits
     // ModSpecificModifier3 == Unused
    
     public Cooldown timer;
-    public GameObject splitsInto;
-    public Projectile ParentProjectile;
     private GameBase ParentGun;
-    public List<SplitMod> ChildMods;
+    public List<Mod> ChildMods;
 
-    public SplitMod (List<AttributeEntity> attributes,  GameObject split, Projectile parentProjectile)
+    public SplitMod (List<AttributeEntity> attributes,  GameObject split, Projectile parentProjectile) : base(attributes, parentProjectile)
     {
-        ChildMods = new List<SplitMod>();
-        Attributes = new AttributesManagerLite();
-        Attributes.AddAttribute(attributes);
-        ParentProjectile = parentProjectile;
+        ChildMods = new List<Mod>();
         splitsInto = split;
         timer = new Cooldown(10f, 2f);
     }
 
-    public void Update()
+    public override void Update()
     {
         if (timer.IsCool)
         {
@@ -44,6 +36,11 @@ public class SplitMod
             }
             timer.StartCooldown();
         }
+    }
+
+    public override void Reset ()
+    {
+        timer = new Cooldown(10f, 2f);
     }
 }
 

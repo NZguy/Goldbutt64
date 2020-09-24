@@ -13,16 +13,16 @@ public class Projectile : GameBase
     public bool agentBounce = true;
     public bool splitOnColl = false;
     public bool splitOnFire = false;
-    public List<SplitMod> mods;
+    public List<Mod> mods;
 
     private Vector3 oldvelocity;
-    public void Init(List<AttributeEntity> attributes, List<SplitMod> mods)
+    public void Init(List<AttributeEntity> attributes, List<Mod> mods)
     {
-        foreach (SplitMod mod in mods)
+        foreach (Mod mod in mods)
         {
             mod.splitsInto = splitsInto;
             mod.ParentProjectile = this;
-            mod.timer = new Cooldown(10f, 2f);
+            mod.Reset();
         }
 
 
