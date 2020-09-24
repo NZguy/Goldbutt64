@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Attributes;
+﻿using Assets.Scripts;
+using Assets.Scripts.Attributes;
 using Assets.Scripts.Events.Base;
 using Assets.Scripts.Events.OnEvents;
 using Assets.Scripts.Interfaces;
@@ -7,77 +8,66 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : NotifierBase, ISubscriber
+public class Player : Actor
 {
     public GameObject primaryWeapon;
-    public AttributeManager Attributes;
     private Rigidbody rb;
     private bool IsMoving;
-
+    public Gun gun;
     public float Health;
 
     void Start()
     {
-        this.rb = GetComponent<Rigidbody>();
-        Attributes.Parent = this;
+        this.rb = this.GetComponent<Rigidbody>();
         #region Test Attributes
 
-        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed)
-        {
-            FlatValue = 20,
-            PercentValue = 1
-        });
+        AddAttribute(new AttributeEntity(AttributeType.MovementSpeed, 20, 1));
+        AddAttribute(new AttributeEntity(AttributeType.RateOfFire, 1, 0));
+        AddAttribute(new AttributeEntity(AttributeType.Size, 1, 0));
 
-        AddAttribute(new AttributeEntity(AttributeType.AttackSpeed)
-        {
-            FlatValue = 5,
-            PercentValue = 60
-        });
 
-        AddAttribute(new AttributeEntity(AttributeType.Size)
-        {
-            FlatValue = 1,
-            PercentValue = 0
-        });
+        AddAttribute(new AttributeEntity(AttributeType.ProjectileMass, 0.0001f, 0));
+        AddAttribute(new AttributeEntity(AttributeType.ProjectileDamage, 10, 0));
+        AddAttribute(new AttributeEntity(AttributeType.ProjectileBounce, 1, 0));
+        AddAttribute(new AttributeEntity(AttributeType.ProjectileSpeed, 10, 0));
+        AddAttribute(new AttributeEntity(AttributeType.RateOfFire, 10, 0));
+        //AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, 1, 0));
+        //AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, 15, 0));
+        //AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier3, 0, 0));
+
         #endregion
-
-
-        // Some default attributes for testing / playing with. 
+        EquipItem(primaryWeapon.GetComponent<Gun>());
+        UpdateAttributes();
     }
 
     void Update()
     {
-
+        UpdateAttributes();
 
         transform.rotation = GetCharacterRotation();
-        rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * Attributes.GetValue(AttributeType.MovementSpeed), 0, Input.GetAxis("Vertical_Move") * Attributes.GetValue(AttributeType.MovementSpeed));
+        rb.velocity = new Vector3(Input.GetAxis("Horizontal_Move") * GetAttributeValue(AttributeType.MovementSpeed), 0, Input.GetAxis("Vertical_Move") * GetAttributeValue(AttributeType.MovementSpeed));
+        this.transform.localScale = new Vector3(GetAttributeValue(AttributeType.Size), GetAttributeValue(AttributeType.Size), GetAttributeValue(AttributeType.Size));
 
+        //bool IsMovingNew = rb.velocity.magnitude > 0;
+        //if (IsMovingNew && !IsMoving)
+        //{   // Just starting moving - better let my many subscribers know!
+        //    Notify(new OnStartMoving(this, this));
 
-        this.transform.localScale = new Vector3(Attributes.GetValue(AttributeType.Size), Attributes.GetValue(AttributeType.Size), Attributes.GetValue(AttributeType.Size));
+        //} else if (!IsMovingNew && IsMoving)
+        //{   // Just stopped moving - better let my many subscribers know!
+        //    Notify(new OnStopMoving(this, this));
+        //}
+        //IsMoving = IsMovingNew;
 
-        bool IsMovingNew = rb.velocity.magnitude > 0;
-        if (IsMovingNew && !IsMoving)
-        {   // Just starting moving - better let my many subscribers know!
-            Notify(new OnStartMoving(this, this));
-
-        } else if (!IsMovingNew && IsMoving)
-        {   // Just stopped moving - better let my many subscribers know!
-            Notify(new OnStopMoving(this, this));
-        }
-        IsMoving = IsMovingNew;
-
-        
-
-        //Debug.Log($"Number of Attributes: {Attributes.FinalValues.Count}");
         HandleAttack();
 
     }
 
     private void HandleAttack()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && GUIUtility.hotControl == 0)
             primaryWeapon.GetComponent<Gun>().Attack(true);
-        else if (Input.GetButton("Fire1"))
+        else if (Input.GetButton("Fire1") && GUIUtility.hotControl == 0)
             primaryWeapon.GetComponent<Gun>().Attack(false);
     }
 
@@ -98,24 +88,14 @@ public class Player : NotifierBase, ISubscriber
         return Quaternion.Euler(0, -angle + 180, 0);
     }
 
-    public void AddAttribute(AttributeEntity att)
+    // This probably shouldn't be "Gun" but a base item class instead
+    public void EquipItem(Gun newItem)
     {
-        Attributes.Add(att);
+        gun = newItem;
+        gun.Init(this);
     }
-
-    public void RemoveAttribute(AttributeEntity att)
+    public void UnEquipItem()
     {
-        Attributes.Remove(att);
-    }
-
-    public List<AttributeEntity> GetAttributes()
-    {
-        return Attributes.GetAttributes();
-    }
-
-
-    public bool OnNotify(IGameEvent gameEvent)
-    {
-        throw new System.NotImplementedException();
-    }
+        gun.RevokeAttributes(this);
+    } 
 }

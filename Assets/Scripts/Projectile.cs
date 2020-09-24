@@ -1,32 +1,44 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using Assets.Scripts.Attributes;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : GameBase
 {
-    // public enum Triggers { onHit, onColl, onFire, afterTime, afterBounces };
-    // public Triggers triggers;
     private Cooldown cleanUpTimer;
     public GameObject splitsInto;
-    // public Vector3 dir;
-    public int damage = 0;
-    public float speed = 100;
     private int bounces = 0;
-    public int bounceLimit = 0;
+
     // true if hitting an agent counts as bounce
-    public bool agentBounce = false;
-    // public float waveFeq;
-    // public float waveAmp;
-    public int splits = 0;
+    public bool agentBounce = true;
     public bool splitOnColl = false;
     public bool splitOnFire = false;
-    public SplitMod sMod;
+    public List<SplitMod> mods;
+
+    private Vector3 oldvelocity;
+    public void Init(List<AttributeEntity> attributes, List<SplitMod> mods)
+    {
+        foreach (SplitMod mod in mods)
+        {
+            mod.splitsInto = splitsInto;
+            mod.ParentProjectile = this;
+            mod.timer = new Cooldown(10f, 2f);
+        }
+
+
+        // Adding attributes instead of sharing so that they're locked in. 
+        // Once a projectile is created, the attached attributes shouldn't change.
+        AddAttribute(attributes);
+        UpdateAttributes();
+        this.GetComponent<Rigidbody>().velocity = this.transform.forward * GetAttributeValue(AttributeType.ProjectileSpeed);
+        this.GetComponent<Rigidbody>().mass = GetAttributeValue(AttributeType.ProjectileMass);
+        this.mods = mods;
+    }
 
     void Start()
     {
         cleanUpTimer = new Cooldown(15f, 15f);
-        sMod = new SplitMod(splitsInto, this.gameObject);
-        this.GetComponent<Rigidbody>().velocity = this.transform.forward * speed;
+        oldvelocity = Vector3.zero;
     }
 
     void Update()
@@ -34,31 +46,24 @@ public class Projectile : MonoBehaviour
         // Forces the projectile to face it's move direction
         // May want to make this smoother later if we have none spherical bullets
         transform.LookAt(this.GetComponent<Rigidbody>().velocity + transform.position);
-
-
+        for(int i = 0; i < mods.Count; i++)
+        {
+            mods[i].Update();
+        }
         if (cleanUpTimer.IsCool) Die();
-        // if (bounces >= bounceLimit) Destroy(this.gameObject);
-        if (bounces >= bounceLimit) Die();
-        sMod.Update();
-
-        //this.GetComponent<Rigidbody>().velocity = speed*(this.GetComponent<Rigidbody>().velocity.normalized);
+        if (bounces >= GetAttributeValue(AttributeType.ProjectileBounce)) Die();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        this.GetComponent<Rigidbody>().velocity = speed * (this.GetComponent<Rigidbody>().velocity.normalized);
+        this.GetComponent<Rigidbody>().velocity = GetAttributeValue(AttributeType.ProjectileSpeed) * (this.GetComponent<Rigidbody>().velocity.normalized);
 
         Enemy enemy = collision.transform.GetComponent<Enemy>();
         if (enemy != null)
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(GetAttributeValue(AttributeType.ProjectileDamage));
             if (agentBounce) bounces += 1;
         }
         else bounces += 1;
-    }
-
-    void Die()
-    {
-        Destroy(gameObject);
     }
 }

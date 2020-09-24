@@ -294,12 +294,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c9b91f80c4c914d99e2ed20864ea4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NotifierParent: {fileID: 0}
   splitsInto: {fileID: 9180623448857620240}
-  damage: 10
-  speed: 10
-  bounceLimit: 1
   agentBounce: 0
-  splits: 1
   splitOnColl: 1
   splitOnFire: 0
 --- !u!33 &6073744581629168690
@@ -378,7 +375,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!96 &-55415406895772950
 TrailRenderer:

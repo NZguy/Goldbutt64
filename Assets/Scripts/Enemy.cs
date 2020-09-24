@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
     private float dupeCooldown;
     public float dupeCooldownMax;
 
-    public int health = 50;
+    public float health = 50;
     public float speed = 2f;
     public GameObject player;
     private Rigidbody rb;
@@ -84,7 +84,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void TakeDamage (int amount)
+    public void TakeDamage (float amount)
     {
         health -= amount;
         if (health <= 0f)

@@ -1,17 +1,31 @@
-﻿using System.Collections;
+﻿using Assets.Scripts;
+using Assets.Scripts.Attributes;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 public class SplitMod
 {
-    private Cooldown timer;
-    public GameObject splitsInto;
-    public GameObject parObj;
 
-    public SplitMod (GameObject split, GameObject par)
+    public AttributesManagerLite Attributes;
+
+    // ModSpecificModifier1 == Number of Times to split projectile
+    // ModSpecificModifier2 == Angle between splits
+    // ModSpecificModifier3 == Unused
+   
+    public Cooldown timer;
+    public GameObject splitsInto;
+    public Projectile ParentProjectile;
+    private GameBase ParentGun;
+    public List<SplitMod> ChildMods;
+
+    public SplitMod (List<AttributeEntity> attributes,  GameObject split, Projectile parentProjectile)
     {
-        parObj = par;
+        ChildMods = new List<SplitMod>();
+        Attributes = new AttributesManagerLite();
+        Attributes.AddAttribute(attributes);
+        ParentProjectile = parentProjectile;
         splitsInto = split;
         timer = new Cooldown(10f, 2f);
     }
@@ -20,14 +34,14 @@ public class SplitMod
     {
         if (timer.IsCool)
         {
-            Quaternion newRotation = parObj.transform.rotation;
-            newRotation *= Quaternion.Euler(0, 15, 0);
-            GameObject newProj = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
 
-            //newRotation = parObj.transform.rotation;
-            //newRotation *= Quaternion.Euler(0, -15, 0);
-            //GameObject newProj2 = GameObject.Instantiate(splitsInto, parObj.transform.position, newRotation);
-
+            for (int i = 1; i <= Attributes.GetAttributeValue(AttributeType.ModSpecificModifier1); i++)
+            {
+                Quaternion newRotation = ParentProjectile.transform.rotation;
+                newRotation *= Quaternion.Euler(0, Attributes.GetAttributeValue(AttributeType.ModSpecificModifier2) * i, 0);
+                GameObject newProjectile = GameObject.Instantiate(splitsInto, ParentProjectile.transform.position, newRotation);
+                newProjectile.GetComponent<Projectile>().Init(Attributes.GetAttributes(), ChildMods);
+            }
             timer.StartCooldown();
         }
     }

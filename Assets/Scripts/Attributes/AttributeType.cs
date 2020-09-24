@@ -10,37 +10,58 @@ using UnityEngine;
 
 public enum AttributeType
 {
-    [TypeInfoAttribute(DisplayName = "Movement Speed", Description = "The rate at which a character is able to move.", DefaultFlatValue = 10, DefaultPercentValue = 100)]
+    [TypeInfoAttribute(DisplayName = "Movement Speed", Description = "The rate at which a character is able to move.", DefaultValue = 10)]
     MovementSpeed,
 
-    [TypeInfoAttribute(DisplayName = "Attack Speed", Description = "The rate at which a character is able to attack.", DefaultFlatValue = 1, DefaultPercentValue = 100)]
-    AttackSpeed,
+    [TypeInfoAttribute(DisplayName = "RateOfFire", Description = "Shots per second", DefaultValue = 1)]
+    RateOfFire,
 
-    [TypeInfoAttribute(DisplayName = "Projectile Lifespan", Description = "The maximum time in seconds a projectile will exist for.", DefaultFlatValue = 10, DefaultPercentValue = 100)]
-    ProjectileLifeSpan,
     
     [TypeInfoAttribute(DisplayName = "Snakes", Description = "?")]
     Snakes,
 
-    [TypeInfoAttribute(DisplayName = "Size", Description = "?", DefaultFlatValue = 1, DefaultPercentValue = 100)]
+    [TypeInfoAttribute(DisplayName = "Size", Description = "?", DefaultValue = 1)]
     Size,
+
+    [TypeInfoAttribute(DisplayName = "Projectile Lifespan", Description = "The maximum time in seconds a projectile will exist for.", DefaultValue = 10)]
+    ProjectileLifeSpan,
+
+    [TypeInfoAttribute(DisplayName = "ProjectileDamage", Description = "Base damage per projectile.")]
+    ProjectileDamage,
+
+    [TypeInfoAttribute(DisplayName = "ProjectileSpeed", Description = "Base projectile movement speed.", DefaultValue = 100)]
+    ProjectileSpeed,
+
+    [TypeInfoAttribute(DisplayName = "ProjectileBounce", Description = "?", DefaultValue = 0)]
+    ProjectileBounce,
+
+    [TypeInfoAttribute(DisplayName = "ProjectileMass", Description = "?", DefaultValue = 0.05f)]
+    ProjectileMass,
+
+    [TypeInfoAttribute(DisplayName = "ModSpecificModifier1", Description = "?")]
+    ModSpecificModifier1,
+
+    [TypeInfoAttribute(DisplayName = "ModSpecificModifier2", Description = "?")]
+    ModSpecificModifier2,
+
+    [TypeInfoAttribute(DisplayName = "ModSpecificModifier3", Description = "?")]
+    ModSpecificModifier3,
 }
-    //Health,
-    //HealthRegen,
-    //Mana,
-    //ManaRegen,
-    //Lives,
-    //Size,
-    //Piercing,
-    //PiercingResistance,
-    //CritChance,
+//Health,
+//HealthRegen,
+//Mana,
+//ManaRegen,
+//Lives,
+//Size,
+//Piercing,
+//PiercingResistance,
+//CritChance,
 
 public sealed class TypeInfoAttribute : Attribute // (C#/.NET Attribute - not our Attribute)
 {
     public string DisplayName;
     public string Description;
-    public float DefaultFlatValue;
-    public float DefaultPercentValue;
+    public float DefaultValue;
     public bool IsSecret = false;
 }
 

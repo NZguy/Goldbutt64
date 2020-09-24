@@ -55,10 +55,10 @@ namespace Assets.Scripts.Events.Base
         private static Dictionary<ISubscriber, Dictionary<IGameEvent, INotifier>> AllSubs = new Dictionary<ISubscriber, Dictionary<IGameEvent, INotifier>>();
         private Dictionary<Type, List<ISubscriber>> Subscribed = new Dictionary<Type, List<ISubscriber>>();
         private List<(IGameEvent gameEvent, ISubscriber subscriber)> PendingRemoval = new List<(IGameEvent gameEvent, ISubscriber subscriber)>();
-        public NotifierBase Parent;
 
         public void Subscribe(IGameEvent gameEvent, ISubscriber sub)
         {
+            Debug.Log($"Subcribing to {gameObject.name} for  {gameEvent.ToString()}");
             if (Subscribed.ContainsKey(gameEvent.GetType()))
             {
                 List<ISubscriber> CurrentSubs = Subscribed[gameEvent.GetType()];
@@ -115,24 +115,15 @@ namespace Assets.Scripts.Events.Base
         {
             try
             {
-                if (Parent != null)
+                IsBusyNotifying = true;
+                if (Subscribed != null && Subscribed.ContainsKey(gameEvent.GetType()))
                 {
-                    Parent.Notify(gameEvent);
-                } 
-                else
-                {
-                    IsBusyNotifying = true;
-                    if (Subscribed != null && Subscribed.ContainsKey(gameEvent.GetType()))
+                    foreach (ISubscriber sub in Subscribed[gameEvent.GetType()])
                     {
-                        foreach (ISubscriber sub in Subscribed[gameEvent.GetType()])
-                        {
-                            if (sub != null && sub.OnNotify(gameEvent))
-                                UnSubscribe(gameEvent, sub);
-                        }
+                        if (sub != null && sub.OnNotify(gameEvent))
+                            UnSubscribe(gameEvent, sub);
                     }
                 }
-
-
             }
             catch (Exception e)
             {

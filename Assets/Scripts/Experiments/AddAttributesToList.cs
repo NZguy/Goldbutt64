@@ -24,13 +24,11 @@ public class AddAttributesToList : MonoBehaviour, ISubscriber
             /// This needs to be replaced by a parent class that overrides whatever unload/dispose method unity uses to also unsubscribe events.
             if (ScrollView == null)
             {
-                //Debug.Log("Scrollview was null");
                 return true;
             }
 
             if (ScrollContent == null)
             {
-                //Debug.Log("ScrollContent was null");
                 return true;
             }
             /////////////

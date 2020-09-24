@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Assets.Scripts.Attributes
 {
 
-    public class AttributeManager : NotifierBase//, ISubscriber
+    public class AttributeManager : NotifierBase, ISubscriber
     {
 
         public List<AttributeEntity> GetAttributes()
@@ -23,6 +23,11 @@ namespace Assets.Scripts.Attributes
         private HashSet<AttributeEntity> attributesNeedingUpdates = new HashSet<AttributeEntity>();
         private Dictionary<AttributeType, float> PercentValues = new Dictionary<AttributeType, float>();
         private Dictionary<AttributeType, float> FlatValues = new Dictionary<AttributeType, float>();
+
+        // Dictionary for shared Attribute Managers
+        private Dictionary<GameBase, AttributeManager> SharedAttributes = new Dictionary<GameBase, AttributeManager>();
+
+        // Stale if final values need updating to reflect changes in attributes.
         private bool IsStale;
 
         // Contains a copy of all attributes grouped by AttributeType. Created for debug use (and maybe for displaying stats later).
@@ -31,7 +36,32 @@ namespace Assets.Scripts.Attributes
         // Contains the final calculated values to be used by other objects.
         public Dictionary<AttributeType, float> FinalValues = new Dictionary<AttributeType, float>();
 
-        public void Update()
+        public void ShareAttributes(GameBase OwnerOfAttributesToBeShared)
+        {
+            if (!SharedAttributes.ContainsKey(OwnerOfAttributesToBeShared))
+            {
+                OwnerOfAttributesToBeShared.Subscribe(new OnAttributeAdd(null, null), this);
+                OwnerOfAttributesToBeShared.Subscribe(new OnAttributeRemove(null, null), this);
+                SharedAttributes[OwnerOfAttributesToBeShared] = OwnerOfAttributesToBeShared;
+                AddAttribute(SharedAttributes[OwnerOfAttributesToBeShared].GetAttributes());
+                CalculateFinalValues();
+            }
+        }
+
+        public void RevokeAttributes (GameBase OwnerOfSharedAttributes)
+        {
+            if (SharedAttributes.ContainsKey(OwnerOfSharedAttributes))
+            {
+                OwnerOfSharedAttributes.UnSubscribe(new OnAttributeAdd(null, null), this);
+                OwnerOfSharedAttributes.UnSubscribe(new OnAttributeRemove(null, null), this);
+                RemoveAttribute(SharedAttributes[OwnerOfSharedAttributes].GetAttributes());
+                SharedAttributes.Remove(OwnerOfSharedAttributes);
+                CalculateFinalValues();
+            }
+        }
+
+
+        public void UpdateAttributes()
         {
             foreach (AttributeEntity att in attributesNeedingUpdates)
             {
@@ -47,10 +77,13 @@ namespace Assets.Scripts.Attributes
         }
 
         #region Add Methods
-        public void Add(AttributeEntity att)
+        public void AddAttribute(AttributeEntity att)
         {
             if (attributes.Contains(att))
-                Debug.Log($"AttributeManager already contains {att.ToString()}.");
+            {
+                //Debug.Log($"AttributeManager already contains {att.ToString()}.");
+
+            }
             else
             {
                 IsStale = true;
@@ -78,11 +111,11 @@ namespace Assets.Scripts.Attributes
                 Notify(new OnAttributeAdd(this, att));
             }
         }
-        public void Add(List<AttributeEntity> atts)
+        public void AddAttribute(List<AttributeEntity> atts)
         {
             foreach (AttributeEntity att in atts)
             {
-                Add(att);
+                AddAttribute(att);
             }
         }
         #endregion
@@ -100,7 +133,7 @@ namespace Assets.Scripts.Attributes
         #endregion
 
         #region Remove Methods
-        public void Remove(AttributeEntity att)
+        public void RemoveAttribute(AttributeEntity att)
         {
             if (att == null)
                 return;
@@ -116,6 +149,7 @@ namespace Assets.Scripts.Attributes
                 Notify(new OnTextUpdate(this, "StatsAttributes", ToStringTableCompleteRich()));
                 Notify(new OnTextUpdate(this, "StatsFinalValues", ToStringTableFinalValues()));
                 Notify(new OnAttributeRemove(this, att));
+                Debug.Log($"Removed Attribute {att.Name} from {gameObject.name}");
             }
             else
             {
@@ -123,20 +157,20 @@ namespace Assets.Scripts.Attributes
             }
         }
 
-        public void Remove(List<AttributeEntity> atts)
+        public void RemoveAttribute(List<AttributeEntity> atts)
         {
             foreach (AttributeEntity att in atts)
             {
-                Remove(att);
+                RemoveAttribute(att);
             }
         }
         #endregion
 
-        public float GetValue(AttributeType type)
+        public float GetAttributeValue(AttributeType type)
         {
             if (FinalValues.ContainsKey(type))
                 return FinalValues[type];
-            return 0;
+            return AttributeEnumsExtended.GetTypeInfoFrom(type, type.GetType()).DefaultValue;
         }
 
         #region Debug/Print methods
@@ -198,6 +232,25 @@ namespace Assets.Scripts.Attributes
                 return "+" + (percent * 100.0f) + "%";
             else
                 return (percent * 100.0f) + "%";
+        }
+
+        public bool OnNotify(IGameEvent gameEvent)
+        {
+            //Debug.Log($"Notfying {this.name} of {gameEvent.ToString()}");
+
+            if (gameEvent is OnAttributeAdd newAttribute)
+            {
+                AddAttribute(newAttribute.Attribute);
+                //if (IsStale)
+                    CalculateFinalValues();
+            }
+            if (gameEvent is OnAttributeRemove removeAtt)
+            {
+                RemoveAttribute(removeAtt.Attribute);
+                //if (IsStale)
+                    CalculateFinalValues();
+            }
+            return false;
         }
 
 

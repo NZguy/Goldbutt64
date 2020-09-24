@@ -21,7 +21,10 @@ namespace Assets.Scripts.Attributes
 
             set
             {
-                _percentValue = value / 100.0f;
+                if (value > 0)
+                    _percentValue = value / 100.0f;
+                else
+                    _percentValue = value;
             }
         }
 
@@ -32,6 +35,15 @@ namespace Assets.Scripts.Attributes
         {
             Name = "Temp Item Name";
             Type = type;
+        }
+
+        public AttributeEntity(AttributeType type, float flat, float percent)
+        {
+            string name = AttributeEnumsExtended.GetTypeInfoFrom(type, type.GetType()).DisplayName;
+            Name = string.IsNullOrEmpty(name) ? "Default Name" : name;
+            Type = type;
+            FlatValue = flat;
+            PercentValue = percent;
         }
 
         // value change
