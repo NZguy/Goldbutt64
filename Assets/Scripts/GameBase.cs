@@ -11,12 +11,8 @@ namespace Assets.Scripts
     // Contains Attribute and Notification support
     public class GameBase : AttributeManager
     {
-        //private void Update()
-        //{
-        //    UpdateAttributes();
-        //}
 
-        public void Die()
+        public virtual void Die()
         {
             RemoveAllSubs(this);
             Destroy(gameObject);

@@ -58,7 +58,6 @@ namespace Assets.Scripts.Events.Base
 
         public void Subscribe(IGameEvent gameEvent, ISubscriber sub)
         {
-            Debug.Log($"Subcribing to {gameObject.name} for  {gameEvent.ToString()}");
             if (Subscribed.ContainsKey(gameEvent.GetType()))
             {
                 List<ISubscriber> CurrentSubs = Subscribed[gameEvent.GetType()];

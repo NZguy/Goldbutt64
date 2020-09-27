@@ -20,11 +20,10 @@ public class Projectile : GameBase
     {
         foreach (Mod mod in mods)
         {
-            mod.splitsInto = splitsInto;
+            mod.SplitsInto = splitsInto;
             mod.ParentProjectile = this;
             mod.Reset();
         }
-
 
         // Adding attributes instead of sharing so that they're locked in. 
         // Once a projectile is created, the attached attributes shouldn't change.
@@ -56,6 +55,9 @@ public class Projectile : GameBase
 
     private void OnCollisionEnter(Collision collision)
     {
+        foreach (Mod mod in mods)
+            mod.OnCollision(collision);
+
         this.GetComponent<Rigidbody>().velocity = GetAttributeValue(AttributeType.ProjectileSpeed) * (this.GetComponent<Rigidbody>().velocity.normalized);
 
         Enemy enemy = collision.transform.GetComponent<Enemy>();
@@ -65,5 +67,12 @@ public class Projectile : GameBase
             if (agentBounce) bounces += 1;
         }
         else bounces += 1;
+    }
+
+    public override void Die()
+    {
+        foreach (Mod mod in mods)
+            mod.OnProjectileDeath();
+        base.Die();
     }
 }

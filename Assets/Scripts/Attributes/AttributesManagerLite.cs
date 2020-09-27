@@ -46,6 +46,7 @@ public class AttributesManagerLite
                 FlatValues.Add(att.Type, att.FlatValue);
                 FinalValues.Add(att.Type, 0);
             }
+            CalculateFinalValues();
         }
     }
     public void AddAttribute(List<AttributeEntity> atts)
