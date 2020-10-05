@@ -24,4 +24,14 @@ public class TurnMod : Mod
         rb.velocity = Quaternion.AngleAxis(Attributes.GetAttributeValue(AttributeType.ModSpecificModifier1) * Time.deltaTime, Vector3.up) * rb.velocity;
     }
 
+    public override Mod CloneMod()
+    {
+        TurnMod newMod = new TurnMod(Attributes.GetAttributes(), ParentProjectile);
+        foreach (Mod mod in ChildMods)
+        {
+            newMod.ChildMods.Add(mod.CloneMod());
+        }
+        return newMod;
+    }
+
 }

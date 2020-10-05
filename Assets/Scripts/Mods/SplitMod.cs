@@ -30,12 +30,23 @@ namespace Assets.Scripts.Mods
             {
                 Quaternion newRotation = ParentProjectile.transform.rotation;
                 newRotation *= Quaternion.Euler(0, Attributes.GetAttributeValue(AttributeType.ModSpecificModifier2) * i, 0);
-                GameObject newProjectile = GameObject.Instantiate(SplitsInto, ParentProjectile.transform.position, newRotation);
+                GameObject newProjectile = Object.Instantiate(SplitsInto, ParentProjectile.transform.position, newRotation);
                 newProjectile.GetComponent<Projectile>().Init(Attributes.GetAttributes(), ChildMods);
+                newProjectile.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(Attributes.GetAttributeValue(AttributeType.ModSpecificModifier2) * i, Vector3.left) * newProjectile.GetComponent<Rigidbody>().velocity;
             }
             Cycles++;
         }
 
         protected override void ResetChild() { }
+
+        public override Mod CloneMod()
+        {
+            SplitMod newMod = new SplitMod(Attributes.GetAttributes(), SplitsInto, ParentProjectile);
+            foreach (Mod mod in ChildMods)
+            {
+                newMod.ChildMods.Add(mod.CloneMod());
+            }
+            return newMod;
+        }
     }
 }

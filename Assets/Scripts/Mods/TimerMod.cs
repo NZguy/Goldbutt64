@@ -88,5 +88,15 @@ namespace Assets.Scripts.Mods
                     break;
             }
         }
+
+        public override Mod CloneMod()
+        {
+            TimerMod newMod = new TimerMod(Attributes.GetAttributes(), ParentProjectile);
+            foreach (Mod mod in ChildMods)
+            {
+                newMod.ChildMods.Add(mod.CloneMod());
+            }
+            return newMod;
+        }
     }
 }

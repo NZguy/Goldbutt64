@@ -31,6 +31,16 @@ namespace Assets.Scripts.Mods
             ParentTransform = parentTransform;
         }
 
+        public override Mod CloneMod()
+        {
+            ParentAngleMod newMod = new ParentAngleMod(Attributes.GetAttributes(), ParentProjectile, ParentTransform);
+            foreach(Mod mod in ChildMods)
+            {
+                newMod.ChildMods.Add(mod.CloneMod());
+            }
+            return newMod;
+        }
+
         protected override void ResetChild()
         {
             PreviousParentAngle = ParentTransform.rotation.eulerAngles;

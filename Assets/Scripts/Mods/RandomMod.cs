@@ -32,50 +32,7 @@ namespace Assets.Scripts.Mods
 
         private void AssignMod(List<AttributeEntity> attributes, Projectile parentProjectile)
         {
-            switch (_random.Next(7)) {
-                case 1:
-                    _mod = new ReboundMod(attributes, parentProjectile);
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(2), 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(2), 0));
-                    break;
-
-                case 2:
-                    _mod = new SplitMod(attributes, parentProjectile.splitsInto, parentProjectile);
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(5), 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(20), 0));
-                    ((SplitMod)(_mod)).ChildMods.Add(new RandomMod(attributes, parentProjectile, _random));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier3, _random.Next(5), 0));
-                    break;
-
-                case 3:
-                    _mod = new TurnMod(attributes, parentProjectile);
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(360)-180, 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(30), 0));
-                    break;
-
-                case 4:
-                     _mod = new WaveMod(attributes, parentProjectile);
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(10), 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(180), 0));
-                    break;
-                case 5:
-                    _mod = new RandomMod(attributes, parentProjectile, _random);
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(10), 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(180), 0));
-                    break;
-                case 6:
-                    _mod = new TimerMod(attributes, parentProjectile, new RandomMod(attributes, ParentProjectile, _random));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(5), 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(5), 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier3, _random.Next(5), 0));
-                    break;
-
-                default:
-                    _mod = new TurnMod(attributes, parentProjectile);
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(360) - 180, 0));
-                    _mod.Attributes.AddAttribute(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(30), 0));
-                    break;
-            }
+            _mod = ModFactory.PickARandomMod();
             _mod.Attributes.CalculateFinalValues();
             ChildMods.Add(_mod);
         }
@@ -87,6 +44,17 @@ namespace Assets.Scripts.Mods
         protected override void UpdateChild()
         {
             Cycles++;
+        }
+
+        public virtual string GetDescription(int currentIndent = 0)
+        {
+            return this.GetType().Name;
+        }
+
+        public override Mod CloneMod()
+        {
+            RandomMod newMod = new RandomMod(Attributes.GetAttributes(), ParentProjectile, _random);
+            return newMod;
         }
     }
 }

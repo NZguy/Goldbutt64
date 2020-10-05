@@ -99,5 +99,15 @@ namespace Assets.Scripts.Mods
             }
 
         }
+
+        public override Mod CloneMod()
+        {
+            SequenceMod newMod = new SequenceMod(Attributes.GetAttributes(), ParentProjectile);
+            foreach (Mod mod in ChildMods)
+            {
+                newMod.ChildMods.Add(mod.CloneMod());
+            }
+            return newMod;
+        }
     }
 }

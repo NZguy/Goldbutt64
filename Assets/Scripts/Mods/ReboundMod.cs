@@ -34,8 +34,6 @@ public class ReboundMod : Mod
 
     }
 
-    // Update is called once per frame
-
     protected override void UpdateChild()
     {
         switch (state)
@@ -82,5 +80,15 @@ public class ReboundMod : Mod
         state = STATE_SETUP;
         flipTimer = new Cooldown(2 * Attributes.GetAttributeValue(AttributeType.ModSpecificModifier1));
         delayTimer = new Cooldown(Attributes.GetAttributeValue(AttributeType.ModSpecificModifier2));
+    }
+
+    public override Mod CloneMod()
+    {
+        ReboundMod newMod = new ReboundMod(Attributes.GetAttributes(), ParentProjectile);
+        foreach (Mod mod in ChildMods)
+        {
+            newMod.ChildMods.Add(mod.CloneMod());
+        }
+        return newMod;
     }
 }

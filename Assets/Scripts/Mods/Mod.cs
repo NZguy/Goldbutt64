@@ -5,6 +5,7 @@ using UnityEngine;
 
 public abstract class Mod
 {
+
     private GameObject _splitsInto;
     public GameObject SplitsInto
     {
@@ -19,8 +20,6 @@ public abstract class Mod
             _splitsInto = value;
         }
     }
-
-
 
     private Projectile _parentProjectile;
     public Projectile ParentProjectile
@@ -88,6 +87,8 @@ public abstract class Mod
 
         if (IsEnabled)
         {
+            foreach (Mod mod in ChildMods)
+                mod.Update();
             UpdateChild();
         }
     }
@@ -100,5 +101,23 @@ public abstract class Mod
             mod.Reset();
     }
     protected abstract void ResetChild();
+
+    public virtual string GetDescription(int currentIndent = 0)
+    {
+        string description = this.GetType().Name;
+        currentIndent++;
+        foreach (Mod mod in ChildMods)
+        {
+            description += "\n";
+            for(int i = 0; i < currentIndent; i++)
+            {
+                description += "\t";
+            }
+            description += mod.GetDescription(currentIndent);
+        }
+        return description;
+    }
+
+    public abstract Mod CloneMod();
 
 }

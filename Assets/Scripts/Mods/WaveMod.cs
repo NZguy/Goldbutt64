@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Mods
 {
-    class WaveMod : Mod
+    public class WaveMod : Mod
     {
 
         private float startTime = 0;
@@ -47,5 +47,16 @@ namespace Assets.Scripts.Mods
             rb.velocity = Quaternion.AngleAxis((float)rotationAmount, Vector3.up) * rb.velocity;
             Cycles++;
         }
+
+        public override Mod CloneMod()
+        {
+            WaveMod newMod = new WaveMod(Attributes.GetAttributes(), ParentProjectile);
+            foreach (Mod mod in ChildMods)
+            {
+                newMod.ChildMods.Add(mod.CloneMod());
+            }
+            return newMod;
+        }
     }
+
 }
