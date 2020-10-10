@@ -20,6 +20,7 @@ public class Gun : GameBase
     public void Init(GameBase owner)
     {
         AttachedMods = new List<Mod>();
+        AttachedMods.Add(ModFactory.GetSampleMod());
         ShareAttributes(owner);
         UpdateAttributes();
     }

@@ -45,16 +45,12 @@ namespace Assets.Scripts.Mods
 
             }
             rb.velocity = Quaternion.AngleAxis((float)rotationAmount, Vector3.up) * rb.velocity;
-            Cycles++;
+            CurrentIterationCount++;
         }
 
-        public override Mod CloneMod()
+        protected override Mod CloneModChild()
         {
             WaveMod newMod = new WaveMod(Attributes.GetAttributes(), ParentProjectile);
-            foreach (Mod mod in ChildMods)
-            {
-                newMod.ChildMods.Add(mod.CloneMod());
-            }
             return newMod;
         }
     }

@@ -44,13 +44,13 @@ namespace Assets.Scripts.Mods
         private const int STATE_FINISH = 4;
         private int state = 0;
         private int CurrentModIndex = 0;
-
+        private int CurrentChildModStartCycle = 0;
         protected override void UpdateChild()
         {
-            if (ChildMods[CurrentModIndex] is TimerMod timermod)
-                Debug.Log($"Current Cycle: {Cycles}/{MaxCycles}, IsEnabled={IsEnabled}, CurrentMod: {ChildMods[CurrentModIndex].GetType().Name}, CurrentIndex: {CurrentModIndex}, ModCycles: {ChildMods[CurrentModIndex].Cycles}, CurrentState: {state}, TimerMod State: {timermod.state}");
-            else
-                Debug.Log($"Current Cycle: {Cycles}/{MaxCycles}, IsEnabled={IsEnabled}, CurrentMod: {ChildMods[CurrentModIndex].GetType().Name}, CurrentIndex: {CurrentModIndex}, ModCycles: {ChildMods[CurrentModIndex].Cycles}, CurrentState: {state}");
+            //if (ChildMods[CurrentModIndex] is TimerMod timermod)
+            //    Debug.Log($"Current Cycle: {Cycles}/{MaxCycles}, IsEnabled={IsEnabled}, IsModEnabled={ChildMods[CurrentModIndex].IsEnabled}, CurrentMod: {ChildMods[CurrentModIndex].GetType().Name}, CurrentIndex: {CurrentModIndex}, ModCycles: {ChildMods[CurrentModIndex].Cycles}/{ChildMods[CurrentModIndex].MaxCycles}, CurrentState: {state}, TimerMod State: {timermod.state}");
+            //else
+            //    Debug.Log($"Current Cycle: {Cycles}/{MaxCycles}, IsEnabled={IsEnabled}, IsModEnabled={ChildMods[CurrentModIndex].IsEnabled}, CurrentMod: {ChildMods[CurrentModIndex].GetType().Name}, CurrentIndex: {CurrentModIndex}, ModCycles: {ChildMods[CurrentModIndex].Cycles}/{ChildMods[CurrentModIndex].MaxCycles}, CurrentState: {state}");
             switch (state)
             {
                 case STATE_START:
@@ -59,16 +59,15 @@ namespace Assets.Scripts.Mods
                     break;
                 case STATE_START_TO_UPDATE:
                     state++;
-
+                    CurrentChildModStartCycle = ChildMods[CurrentModIndex].Cycles;
                     break;
                 case STATE_UPDATE:
                     ChildMods[CurrentModIndex].Update();
-
                     if (!ChildMods[CurrentModIndex].IsEnabled)
                         state = STATE_FINISH;
                     // Check if current child mod has had enough update tick to complete a cycle.
                     // If so, move on to the next state.
-                    if (ChildMods[CurrentModIndex].Cycles > Cycles)
+                    if (ChildMods[CurrentModIndex].Cycles > CurrentChildModStartCycle)
                         state++;
                     break;
                 case STATE_UPDATE_TO_FINISH:
@@ -76,37 +75,42 @@ namespace Assets.Scripts.Mods
 
                     break;
                 case STATE_FINISH:
-                    CurrentModIndex++;
+                    if (!ChildMods[CurrentModIndex].IsEnabled)
+                        ChildMods.Remove(ChildMods[CurrentModIndex]);
+                    else
+                        CurrentModIndex++;
+                    
                     // All child mods have completed 1 cycle.
-                    if (CurrentModIndex >= ChildMods.Count-1)
+                    if (CurrentModIndex >= ChildMods.Count)
                     {
+                        if (ChildMods.Count <= 0)
+                        {
+                            this.IsEnabled = false;
+                            return;
+                        }
+
+
                         CurrentModIndex = 0;
                         // If Cycles exceeds MaxCycles, this mod will be automatically disabled (see Update() in Mod.cs) 
-                        Cycles++;
+                        CurrentIterationCount++;
                         foreach (Mod mod in ChildMods)
                             mod.Reset();
                     }
                     // There are still child mods waiting to perform their cycle.
                     // Restart states and update next child mod.
-                    else
-                    {
                         state = STATE_START;
-                    }
                     break;
                 default:
-                    state++;
+                    Debug.Log("Bad state in sequence mod");
+                    state = STATE_START;
                     break;
             }
 
         }
 
-        public override Mod CloneMod()
+        protected override Mod CloneModChild()
         {
             SequenceMod newMod = new SequenceMod(Attributes.GetAttributes(), ParentProjectile);
-            foreach (Mod mod in ChildMods)
-            {
-                newMod.ChildMods.Add(mod.CloneMod());
-            }
             return newMod;
         }
     }

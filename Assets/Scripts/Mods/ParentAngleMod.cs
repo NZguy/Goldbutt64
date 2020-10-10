@@ -31,13 +31,9 @@ namespace Assets.Scripts.Mods
             ParentTransform = parentTransform;
         }
 
-        public override Mod CloneMod()
+        protected override Mod CloneModChild()
         {
             ParentAngleMod newMod = new ParentAngleMod(Attributes.GetAttributes(), ParentProjectile, ParentTransform);
-            foreach(Mod mod in ChildMods)
-            {
-                newMod.ChildMods.Add(mod.CloneMod());
-            }
             return newMod;
         }
 

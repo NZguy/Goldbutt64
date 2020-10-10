@@ -20,8 +20,7 @@ public class Projectile : GameBase
     {
         foreach (Mod mod in mods)
         {
-            mod.SplitsInto = splitsInto;
-            mod.ParentProjectile = this;
+            mod.InitializeMods(this, splitsInto);
             mod.Reset();
         }
 

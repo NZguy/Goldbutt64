@@ -26,7 +26,7 @@ namespace Assets.Scripts.Mods
         /// <param name="attributes"></param>
         /// <param name="parentProjectile"></param>
         /// <param name="mod"></param>
-        public TimerMod(List<AttributeEntity> attributes, Projectile parentProjectile, Mod mod = null, int maxCycles = -1) : base(attributes, parentProjectile)
+        public TimerMod(List<AttributeEntity> attributes, Projectile parentProjectile, Mod mod = null) : base(attributes, parentProjectile)
         {
             if (mod != null)
                 ChildMods.Add(mod);
@@ -54,8 +54,8 @@ namespace Assets.Scripts.Mods
                 case STATE_DELAY_HOLD:
                     if (_timer.IsCool)
                     {
-                        // Inital Delay / Cooldown delay is complete.
-                        //Move on to updating the child mods.
+                        // Initial Delay / Cooldown delay is complete.
+                        // Move on to updating the child mods.
                         state = STATE_INIT_RUNNING;
                         foreach (Mod mod in ChildMods)
                             mod.Reset();
@@ -80,7 +80,7 @@ namespace Assets.Scripts.Mods
                     }
                     break;
                 case STATE_RESTART:
-                    Cycles++;
+                    CurrentIterationCount++;
                     state = STATE_START;
                     break;
                 default:
@@ -89,13 +89,9 @@ namespace Assets.Scripts.Mods
             }
         }
 
-        public override Mod CloneMod()
+        protected override Mod CloneModChild()
         {
             TimerMod newMod = new TimerMod(Attributes.GetAttributes(), ParentProjectile);
-            foreach (Mod mod in ChildMods)
-            {
-                newMod.ChildMods.Add(mod.CloneMod());
-            }
             return newMod;
         }
     }

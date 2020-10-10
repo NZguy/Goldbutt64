@@ -22,15 +22,12 @@ public class TurnMod : Mod
     protected override void UpdateChild()
     {
         rb.velocity = Quaternion.AngleAxis(Attributes.GetAttributeValue(AttributeType.ModSpecificModifier1) * Time.deltaTime, Vector3.up) * rb.velocity;
+        CurrentIterationCount++;
     }
 
-    public override Mod CloneMod()
+    protected override Mod CloneModChild()
     {
         TurnMod newMod = new TurnMod(Attributes.GetAttributes(), ParentProjectile);
-        foreach (Mod mod in ChildMods)
-        {
-            newMod.ChildMods.Add(mod.CloneMod());
-        }
         return newMod;
     }
 

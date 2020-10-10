@@ -20,6 +20,9 @@ public class Cooldown
 
     public Cooldown(float val, float delayStart = 0)
     {
+        if (val == 0)
+            val += 0.001f;
+
         StartTime = Time.realtimeSinceStartup;
         CompletionTime = StartTime + delayStart;
         BaseCooldownTime = val; // temp

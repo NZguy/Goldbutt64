@@ -69,7 +69,7 @@ public class ReboundMod : Mod
                 ParentProjectile.gameObject.GetComponent<Rigidbody>().velocity = Vector3.Lerp(Vector3.zero, -vel, perc / (.5f * Attributes.GetAttributeValue(AttributeType.ModSpecificModifier1)));
                 break;
             case STATE_FINISH:
-                Cycles++;
+                CurrentIterationCount++;
                 break;
         }
 
@@ -82,13 +82,9 @@ public class ReboundMod : Mod
         delayTimer = new Cooldown(Attributes.GetAttributeValue(AttributeType.ModSpecificModifier2));
     }
 
-    public override Mod CloneMod()
+    protected override Mod CloneModChild()
     {
         ReboundMod newMod = new ReboundMod(Attributes.GetAttributes(), ParentProjectile);
-        foreach (Mod mod in ChildMods)
-        {
-            newMod.ChildMods.Add(mod.CloneMod());
-        }
         return newMod;
     }
 }

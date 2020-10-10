@@ -43,15 +43,15 @@ namespace Assets.Scripts.Mods
 
         protected override void UpdateChild()
         {
-            Cycles++;
+            CurrentIterationCount++;
         }
 
-        public virtual string GetDescription(int currentIndent = 0)
-        {
-            return this.GetType().Name;
-        }
+        //public override string GetDescription(int currentIndent = 0)
+        //{
+        //    return this.GetType().Name;
+        //}
 
-        public override Mod CloneMod()
+        protected override Mod CloneModChild()
         {
             RandomMod newMod = new RandomMod(Attributes.GetAttributes(), ParentProjectile, _random);
             return newMod;
