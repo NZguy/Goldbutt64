@@ -87,4 +87,8 @@ public class ReboundMod : Mod
         ReboundMod newMod = new ReboundMod(Attributes.GetAttributes(), ParentProjectile);
         return newMod;
     }
+
+    public override void CollisionTriggers(Collision collision)
+    {
+    }
 }

@@ -222,4 +222,7 @@ public abstract class Mod
         }
         return description;
     }
+
+
+    public abstract void CollisionTriggers(Collision collision);
 }

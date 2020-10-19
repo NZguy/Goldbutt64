@@ -56,5 +56,9 @@ namespace Assets.Scripts.Mods
             RandomMod newMod = new RandomMod(Attributes.GetAttributes(), ParentProjectile, _random);
             return newMod;
         }
+
+        public override void CollisionTriggers(Collision collision)
+        {
+        }
     }
 }

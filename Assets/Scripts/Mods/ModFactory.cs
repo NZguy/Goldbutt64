@@ -31,9 +31,22 @@ public static class ModFactory
 
     private static Mod[] SampleMods = new Mod[]
     {
-        Sample_ShotgunSpinner(),
-        Sample_Spinner()
+        Sample_Explosion()
+        //Sample_ShotgunSpinner(),
+        //Sample_Spinner()
     };
+
+    /// <summary>
+    /// Causes projectile to explode on impact.
+    /// </summary>
+    /// <returns></returns>
+    private static Mod Sample_Explosion()
+    {
+        //ExplosionMod exp = new ExplosionMod(new List<AttributeEntity>(), null);
+        ExplosionMod exp = GetExplosionMod();
+
+        return  exp;
+    }
 
     /// <summary>
     /// Travels some distance then spins in a circle while shooting projectiles.
@@ -120,7 +133,7 @@ public static class ModFactory
     /// <returns>A Random mod</returns>
     public static Mod PickARandomMod(List<AttributeEntity> attributes = null, Projectile parentProjectile = null)
     {
-        switch(_random.Next(8))
+        switch(_random.Next(9))
         {
             case 0:
                 return GetParentAngleMod(attributes);
@@ -136,9 +149,28 @@ public static class ModFactory
                 return GetWaveMod(attributes);
             case 6:
                 return GetRandomMod(attributes);
+            case 7:
+                return GetExplosionMod(attributes);
             default:
                 return GetTurnMod(attributes);
         }
+    }
+
+    public static ExplosionMod GetExplosionMod(List<AttributeEntity> attributes = null)
+    {
+        if (attributes == null)
+        {
+            attributes = new List<AttributeEntity>();
+            // Damage
+            attributes.Add(new AttributeEntity(AttributeType.ModSpecificModifier1, _random.Next(50), 0));
+            // Radius
+            attributes.Add(new AttributeEntity(AttributeType.ModSpecificModifier2, _random.Next(25), 0));
+            // Force
+            attributes.Add(new AttributeEntity(AttributeType.ModSpecificModifier3, _random.Next(150), 0));
+        }
+
+        ExplosionMod _mod = new ExplosionMod(attributes, null);
+        return _mod;
     }
     
     public static RandomMod GetRandomMod(List<AttributeEntity> attributes = null)

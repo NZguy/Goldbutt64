@@ -49,5 +49,9 @@ namespace Assets.Scripts.Mods
             PreviousParentAngle = ParentTransform.rotation.eulerAngles;
         }
 
+
+        public override void CollisionTriggers(Collision collision)
+        {
+        }
     }
 }
