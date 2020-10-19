@@ -113,5 +113,9 @@ namespace Assets.Scripts.Mods
             SequenceMod newMod = new SequenceMod(Attributes.GetAttributes(), ParentProjectile);
             return newMod;
         }
+
+        public override void CollisionTriggers(Collision collision)
+        {
+        }
     }
 }

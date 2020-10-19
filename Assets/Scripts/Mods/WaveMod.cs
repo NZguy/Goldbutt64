@@ -53,6 +53,12 @@ namespace Assets.Scripts.Mods
             WaveMod newMod = new WaveMod(Attributes.GetAttributes(), ParentProjectile);
             return newMod;
         }
+
+        public override void CollisionTriggers(Collision collision)
+        {
+        }
     }
+
+
 
 }

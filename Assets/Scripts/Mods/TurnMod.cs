@@ -31,4 +31,7 @@ public class TurnMod : Mod
         return newMod;
     }
 
+    public override void CollisionTriggers(Collision collision)
+    {
+    }
 }

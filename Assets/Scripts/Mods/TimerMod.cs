@@ -94,5 +94,9 @@ namespace Assets.Scripts.Mods
             TimerMod newMod = new TimerMod(Attributes.GetAttributes(), ParentProjectile);
             return newMod;
         }
+
+        public override void CollisionTriggers(Collision collision)
+        {
+        }
     }
 }

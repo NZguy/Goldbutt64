@@ -44,5 +44,9 @@ namespace Assets.Scripts.Mods
             SplitMod newMod = new SplitMod(Attributes.GetAttributes(), SplitsInto, ParentProjectile);
             return newMod;
         }
+
+        public override void CollisionTriggers(Collision collision)
+        {
+        }
     }
 }

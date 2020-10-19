@@ -57,6 +57,9 @@ public class Projectile : GameBase
         foreach (Mod mod in mods)
             mod.OnCollision(collision);
 
+        foreach (Mod mod in mods)
+            mod.CollisionTriggers(collision);
+
         this.GetComponent<Rigidbody>().velocity = GetAttributeValue(AttributeType.ProjectileSpeed) * (this.GetComponent<Rigidbody>().velocity.normalized);
 
         Enemy enemy = collision.transform.GetComponent<Enemy>();
